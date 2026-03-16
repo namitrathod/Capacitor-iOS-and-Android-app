@@ -1,0 +1,58 @@
+.page-container
+  padding: 0
+  max-width: 1200px
+  margin: 0 auto
+
+.page-header
+  margin-bottom: 24px
+
+.page-title
+  margin: 0
+  font-size: 1.75rem
+  font-weight: 600
+  color: rgba(0, 0, 0, 0.87)
+  letter-spacing: -0.02em
+
+.form-card
+  border-radius: 12px
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+  max-width: 480px
+
+.user-form
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+  mat-form-field
+    width: 100%
+
+.form-error
+  color: #d32f2f
+  margin: 8px 0 0
+  font-size: 0.875rem
+
+.form-actions
+  margin-top: 24px
+  display: flex
+  gap: 12px
+  align-items: center
+
+  button[type="submit"]
+    margin-left: 0
+
+@media (max-width: 768px)
+  .page-container
+    padding: 0 var(--space-16)
+
+  .page-title
+    font-size: 1.5rem
+
+  .form-card
+    max-width: 100%
+
+  .form-actions
+    flex-direction: column-reverse
+    align-items: stretch
+
+    button
+      width: 100%

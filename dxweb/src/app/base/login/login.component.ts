@@ -12,7 +12,7 @@ export class LoginComponent {
   password: string;
   errorMessage: string;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router) {
     this.username = '';
     this.password = '';
     this.errorMessage = '';
@@ -24,7 +24,7 @@ export class LoginComponent {
     console.log(this.password);
     this.authService.login(this.username, this.password).subscribe(
       () => {
-        this.router.navigate(['/user']); // Redirige al usuario a la ruta de la lista de usuarios
+        this.router.navigate(['/dashboard']); // Redirige al usuario a la ruta de la lista de usuarios
       },
       (error) => {
         if (error.status === 0) {

@@ -1,41 +1,68 @@
-.sidebar-container {
-  display       : flex;
-  flex-direction: column;
-  position      : absolute;
-  top           : 0;
-  bottom        : 0;
-  left          : 0;
-  right         : 0;
-}
-
-.sidebar-is-mobile .sidebar-toolbar {
-  position: fixed;
-  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
-  z-index : 2;
-}
-
-h1.sidebar-app-name {
-  margin-left: 8px;
-}
-
-.sidebar-sidenav-container {
-  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
-       causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+.sidenav-container {
   flex: 1;
-  background-color: rgb(223, 222, 222)!important;
+  min-height: 0;
+  width: var(--sidebar-width) !important;
+  max-width: var(--sidebar-width) !important;
+  background: var(--color-surface-alt) !important;
+  border-right: 1px solid var(--color-border) !important;
 }
 
-.sidebar-is-mobile .sidebar-sidenav-container {
-  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
-       `<body>` to be our scrolling element for mobile layouts. */
-  flex: 1 0 auto;
-
+.sidenav-content-placeholder {
+  display: none !important;
 }
 
-.mat-drawer {
-  width: 250px;
+.sidenav {
+  width: var(--sidebar-width) !important;
+  max-width: var(--sidebar-width) !important;
+  border-right: none !important;
+  background: var(--color-surface-alt) !important;
+  box-shadow: none !important;
+  padding-top: var(--space-8);
 }
 
-.router-container {
-   padding: 5px 20px;
+.nav {
+  padding: var(--space-8) 0;
+}
+
+.nav a {
+  margin: 2px 10px;
+  border-radius: var(--radius-sm);
+  height: 42px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  position: relative;
+}
+
+.nav a:hover {
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+}
+
+.nav a.active {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.nav a.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  border-radius: 0 2px 2px 0;
+  background: var(--color-primary);
+}
+
+.nav a mat-icon {
+  margin-right: 12px;
+  color: inherit;
+  opacity: 0.92;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }

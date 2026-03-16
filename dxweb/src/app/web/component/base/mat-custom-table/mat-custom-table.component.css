@@ -1,59 +1,85 @@
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+  flex-wrap: wrap;
+}
+
+.table-toolbar button {
+  flex-shrink: 0;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.table-search {
+  flex: 1;
+  min-width: 220px;
+  max-width: 400px;
+}
+
+.table-search .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.table-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.data-table {
+  width: 100%;
+  background: var(--color-surface);
+}
+
+.data-table mat-header-cell {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.data-table mat-cell,
+.data-table mat-header-cell {
+  padding: 14px 16px;
+}
+
+.data-table mat-row {
+  transition: background 0.12s ease;
+}
+
+.data-table mat-row:hover {
+  background: var(--color-bg);
+}
+
+.empty-state {
+  padding: var(--space-48) var(--space-24);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--space-16);
+  color: var(--color-text-tertiary);
+}
+
+.empty-state p {
+  margin: 0 0 var(--space-8);
+  font-size: 1rem;
+}
+
+.empty-state .empty-hint {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+}
+
 table {
   width: 100%;
-}
-
-.table-actionbar {
-  padding         : 2px;
-  display         : flex;
-  background-color: rgb(235, 238, 238);
-}
-
-.table-actionbar .search-box {
-  flex: 1;
-}
-
-.search-box mat-form-field {
-  width: 100%;
-
-}
-
-
-
-.table-actionbar .action-box {
-  flex       : 0 0 50%;
-  text-align : right;
-  padding-top: 2px;
-
-
-}
-
-.table-actionbar .action-box button {
-  margin-right: 10px;
-
-}
-
-::ng-deep .mat-form-field-wrapper {
-  padding-bottom: 0;
-}
-
-::ng-deep .mat-form-field-flex>.mat-form-field-infix {
-  padding: 0.4em 0px !important;
-}
-
-::ng-deep .mat-form-field-label-wrapper {
-  top: -1.5em;
-}
-
-::ng-deep .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-  transform: translateY(-1.1em) scale(.75);
-  width    : 133.33333%;
-}
-
-::ng-deep .action-box button .material-icons {
-  font-size: 18px;
-}
-
-::ng-deep .action-box .mat-mini-fab {
-  height: 34px;
-  width : 34px;
 }

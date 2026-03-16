@@ -27,6 +27,7 @@ export class MatCustomTableComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @Output() action: EventEmitter<TableButtonAction> = new EventEmitter<TableButtonAction>()
+  @Output() create: EventEmitter<void> = new EventEmitter<void>()
   @Input() columns!: Array<TableColumn>;
   @Input() dataset: Array<any> = [];
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -58,7 +59,7 @@ export class MatCustomTableComponent implements OnInit {
   };
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  fruits: Fruit[] = [{ name: 'Lemon' }, { name: 'Lime' }, { name: 'Apple' }];
+  fruits: Fruit[] = [];
   announcer = inject(LiveAnnouncer);
 
 
@@ -158,6 +159,10 @@ export class MatCustomTableComponent implements OnInit {
     if (index >= 0) {
       this.fruits[index].name = value;
     }
+  }
+
+  onCreate(): void {
+    this.create.emit();
   }
 }
 

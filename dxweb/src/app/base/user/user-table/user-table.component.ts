@@ -3,8 +3,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormField } from 'src/app/web/component/base/form/interface/form-field.interface';
-import { UserService } from '../../service/user.service';
+import { UserService, UsersPage } from '../../service/user.service';
 import { TableColumn } from 'src/app/web/component/base/mat-custom-table/models/tableColumn';
+import { TableConsts } from 'src/app/web/component/base/mat-custom-table/consts/table';
+import { TableButtonAction } from 'src/app/web/component/base/mat-custom-table/models/tableButtonAction';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-user-table',
@@ -14,22 +17,28 @@ import { TableColumn } from 'src/app/web/component/base/mat-custom-table/models/
 export class UserTableComponent implements OnInit{
   @Input() data: FormField[] = [];
 
-  userList: any[] = [];
+  userList: User[] = [];
 
   tableColumns: TableColumn[] = [
     { columnDef: 'id', header: 'id'},
-    { columnDef: 'username',    header: 'Username' },
+    { columnDef: 'full_name',    header: 'Name' },
     { columnDef: 'email', header: 'Email'},
   ];
 
   selectedRecordData: any;
   selectedRecordForm: FormGroup;
   showFormView: boolean = false;
+  isAddMode: boolean = false;
   userId: number | undefined;
+  createError = '';
+  createEmail = '';
+  createPassword = '';
+  createFullName = '';
+  loading = false;
 
   selectedRecordFields: FormField[] = [
     { key: 'id', label: 'id', type: 'text', required: true },
-    { key: 'username', label: 'username', type: 'text', required: true },
+    { key: 'full_name', label: 'Name', type: 'text', required: true },
     { key: 'email', label: 'email', type: 'email', required: true },
   ];
 
@@ -47,67 +56,43 @@ export class UserTableComponent implements OnInit{
     console.log('UserTableComponent', this.userList);
   }
 
+  /** Exposed for template (avoids TS2341 when route is private). */
+  get hasChildRoute(): boolean {
+    return !!this.route?.firstChild;
+  }
+
   ngOnInit(): void {
     console.log('UserTableComponent ngOnInit');
     this.getUsers();
     console.log('UserTableComponent', this.userList);
     this.route.url.subscribe((urlSegments) => {
-      this.showFormView = urlSegments.some(
-        (segment) => segment.path === 'edit'
-      );
+      this.isAddMode = urlSegments.some((segment) => segment.path === 'add');
+      this.showFormView =
+        this.isAddMode || urlSegments.some((segment) => segment.path === 'edit');
     });
 
     this.route.params.subscribe((params) => {
-      this.userId = +params['id']; // Obtener el ID del usuario de los parámetros de ruta
+      this.userId = +params['id'];
       this.getUsers();
-      console.log('UserTableComponent 2', this.userList);
-    });
-
-    //Add in URL
-    this.route.url.subscribe((urlSegments) => {
-      this.showFormView = urlSegments.some((segment) => segment.path === 'add');
     });
     this.formFields = this.generateFormlyFields();
   }
 
   getUsers() {
-    /*this.userService.getUsers().subscribe(
-      (users: any[]) => {
-        this.userList = users;
-        console.log('UserTableComponent 3', this.userList);
+    this.loading = true;
+    this.userService.getUsers(0, 100).subscribe({
+      next: (page: UsersPage) => {
+        this.userList = page.data;
+        this.loading = false;
       },
-      (error) => {
-        console.error('Error fetching users:', error);
-      }
-    );*/
+      error: () => {
+        this.loading = false;
+      },
+    });
+  }
 
-    this.userList =[
-      {
-          "id": 1,
-          "username": "usuario_ejemplo",
-          "email": "correo@example.com"
-      },
-      {
-          "id": 2,
-          "username": "david",
-          "email": "as@asd"
-      },
-      {
-          "id": 6,
-          "username": "u2suario_2ejemplo",
-          "email": "co2rreo@example.com"
-      },
-      {
-          "id": 8,
-          "username": "davidsdfsdf",
-          "email": "sdfsdfsdf"
-      },
-      {
-          "id": 9,
-          "username": "davidsdfsdfas",
-          "email": "sdfsdfsdf@sdf"
-      }
-  ]
+  onCreate(): void {
+    this.router.navigate(['/user/add']);
   }
 
   onViewRecord(record: any) {
@@ -117,6 +102,36 @@ export class UserTableComponent implements OnInit{
 
   onFormSubmit(formData: any) {
     // Lógica para manejar la submisión del formulario
+  }
+
+  onCreateUserSubmit(): void {
+    this.createError = '';
+    if (!this.createEmail.trim()) {
+      this.createError = 'Email is required';
+      return;
+    }
+    if (!this.createPassword) {
+      this.createError = 'Password is required';
+      return;
+    }
+    this.userService
+      .createUser({
+        email: this.createEmail.trim(),
+        password: this.createPassword,
+        full_name: this.createFullName.trim() || null,
+      })
+      .subscribe({
+        next: () => {
+          this.getUsers();
+          this.router.navigate(['/user']);
+        },
+        error: (err) =>
+          (this.createError = err.error?.detail || 'Failed to create user'),
+      });
+  }
+
+  cancelCreate(): void {
+    this.router.navigate(['/user']);
   }
 
   onRowAction(row: any) {
@@ -181,7 +196,31 @@ export class UserTableComponent implements OnInit{
     return formlyFields;
   }
 
-  onTableAction(event: any) {
-    console.log('event', event)
+  onTableAction(event: TableButtonAction) {
+    if (!event || !event.name) {
+      return;
+    }
+
+    if (event.name === TableConsts.actionButton.delete && event.value?.id != null) {
+      const id = event.value.id;
+      if (confirm(`Are you sure you want to delete user with id ${id}?`)) {
+        this.userService.deleteUser(id).subscribe({
+          next: () => this.getUsers(),
+          error: (err) => console.error('Error deleting user', err),
+        });
+      }
+      return;
+    }
+
+    if (event.name === TableConsts.actionButton.view && event.value?.id != null) {
+      const userId = event.value.id;
+      this.router.navigate(['/user/edit', userId]);
+      return;
+    }
+
+    if (event.name === TableConsts.actionButton.edit && event.value?.id != null) {
+      const userId = event.value.id;
+      this.router.navigate(['/user/edit', userId]);
+    }
   }
 }

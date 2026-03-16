@@ -1,36 +1,44 @@
-<div class="container">
-  <div style="text-align: center;">
-    <h2>Register</h2>
-  </div>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  <div style="display: flex; justify-content: center;">
-    <form (ngSubmit)="register()" style="width: 300px;">
-      <mat-card>
-        <mat-card-content>
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Username</mat-label>
-              <input matInput type="text" name="username" [(ngModel)]="username" required>
-            </mat-form-field>
-          </div>
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Email</mat-label>
-              <input matInput type="email" name="email" [(ngModel)]="email" required>
-            </mat-form-field>
-          </div>
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Password</mat-label>
-              <input matInput type="password" name="password" [(ngModel)]="password" required>
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-        <mat-card-actions style="justify-content: space-between;">
-          <button mat-raised-button type="submit" color="primary">Register</button>
-          <button mat-raised-button type="button" color="warn">Cancel</button>
-        </mat-card-actions>
-      </mat-card>
-    </form>
+<div class="auth-page">
+  <div class="auth-card-wrapper">
+    <mat-card class="auth-card">
+      <mat-card-content>
+        <div class="auth-header">
+          <mat-icon class="auth-logo">person_add</mat-icon>
+          <h1 class="auth-title">Create account</h1>
+          <p class="auth-subtitle">Register with your email and password</p>
+        </div>
+
+        <form (ngSubmit)="register()" class="auth-form">
+          <mat-form-field appearance="outline" class="auth-field">
+            <mat-label>Full name</mat-label>
+            <input matInput type="text" [(ngModel)]="username" name="username" placeholder="Your name" />
+            <mat-icon matSuffix>person_outline</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="auth-field">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email" name="email" placeholder="you@example.com" required />
+            <mat-icon matSuffix>mail_outline</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="auth-field">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="password" name="password" placeholder="••••••••" minlength="6" required />
+            <mat-icon matSuffix>lock_outline</mat-icon>
+          </mat-form-field>
+
+          <p class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+          <button mat-raised-button color="primary" type="submit" class="auth-submit" [disabled]="!email.trim() || !password">
+            Create account
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          Already have an account?
+          <a routerLink="/login" class="auth-link">Sign in</a>
+        </p>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

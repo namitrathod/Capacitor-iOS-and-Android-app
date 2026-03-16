@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './base/login/login.component';
 import { RegisterComponent } from './base/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
-import { HttpClientModule } from '@angular/common/http'; // Importa el HttpClientModule
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Importa el HttpClientModule
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -40,6 +40,9 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { SharedModule } from './share/shared.module';
 import { UserModule } from './base/user/user.module';
+import { AuthInterceptor } from './base/service/auth-interceptor.service';
+import { ProductModule } from './features/product/product.module';
+import { SalesModule } from './features/sales/sales.module';
 
 
 
@@ -87,7 +90,13 @@ import { UserModule } from './base/user/user.module';
     UserModule,
   ],
   exports: [FormComponent],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

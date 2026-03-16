@@ -130,14 +130,33 @@ def read_users_me(current_user: User = Depends(get_current_user)):
 
 
 @app.get("/users", response_model=List[UserResponse])
-def read_users(db: Session = Depends(get_db)):
+def read_users(db: Session = Depends(get_db)) -> List[UserResponse]:
     users = db.query(User).all()
-    return [{"id": user.id, "username": user.username, "email": user.email} for user in users]
+    return [UserResponse(id=user.id, username=user.username, email=user.email) for user in users]
 
 
 @app.get("/users/{user_id}", response_model=UserResponse)
-def read_user_by_id(user_id: int = Path(..., title="The ID of the user to retrieve"), db: Session = Depends(get_db)):
+def read_user_by_id(
+    user_id: int = Path(..., title="The ID of the user to retrieve"),
+    db: Session = Depends(get_db),
+) -> UserResponse:
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado"
+        )
     return UserResponse(id=user.id, username=user.username, email=user.email)
+
+
+@app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(
+    user_id: int = Path(..., title="The ID of the user to delete"),
+    db: Session = Depends(get_db),
+) -> None:
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado"
+        )
+    db.delete(user)
+    db.commit()

@@ -92,6 +92,15 @@ class ItemsOut(SQLModel):
     count: int
 
 
+# Sale (product_id references Item.id)
+class Sale(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int
+    product_id: int
+    quantity: int
+    price: float
+
+
 # Generic message
 class Message(SQLModel):
     message: str

@@ -1,1 +1,26 @@
-<app-sidebar></app-sidebar>
+<!-- When logged in: full-width header + sidebar + content -->
+<div class="main-layout" *ngIf="showSidebar">
+  <header class="top-bar">
+    <button
+      type="button"
+      mat-icon-button
+      class="top-bar-menu-button"
+      (click)="toggleSidebar()"
+      aria-label="Toggle navigation"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a routerLink="/dashboard" class="top-bar-brand">
+      <mat-icon class="top-bar-brand-icon">dashboard</mat-icon>
+      <span class="top-bar-brand-name">Dashboard</span>
+    </a>
+    <div class="top-bar-spacer"></div>
+  </header>
+  <div class="main-row">
+    <app-sidebar></app-sidebar>
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+<router-outlet *ngIf="!showSidebar"></router-outlet>

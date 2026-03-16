@@ -1,7 +1,7 @@
 export interface User {
-    id: number;
-    username: string;
-    email: string;
-    hashed_password: string;
-  }
-  
+  id: number;
+  email: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  full_name?: string | null;
+}

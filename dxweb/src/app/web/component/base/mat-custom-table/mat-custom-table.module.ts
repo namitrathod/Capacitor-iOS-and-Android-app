@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -36,6 +37,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatCheckboxModule,
     MatToolbarModule,
     MatInputModule,
+    MatFormFieldModule,
     FormsModule,
     MatSortModule  ,
     NgxAngularQueryBuilderModule,

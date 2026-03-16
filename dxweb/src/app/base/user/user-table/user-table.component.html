@@ -1,23 +1,53 @@
-<mat-card>
-  <mat-card-content>
-    <h2>Usuarios</h2>
-<ng-container *ngIf="!showFormView">
-  <app-mat-custom-table
- (action)="onTableAction($event)"
-  [dataset]="userList" 
-  [columns]="tableColumns">
-</app-mat-custom-table>
-</ng-container>
+<div class="page-container">
+  <!-- Child route (add/edit): show outlet so nested component can render -->
+  <ng-container *ngIf="hasChildRoute">
+    <router-outlet></router-outlet>
+  </ng-container>
 
+  <!-- List view -->
+  <ng-container *ngIf="!hasChildRoute && !isAddMode && !showFormView">
+    <header class="page-header">
+      <h1 class="page-title">Users</h1>
+    </header>
+    <div class="page-loading" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    <app-mat-custom-table
+      *ngIf="!loading"
+      (action)="onTableAction($event)"
+      (create)="onCreate()"
+      [dataset]="userList"
+      [columns]="tableColumns">
+    </app-mat-custom-table>
+  </ng-container>
 
-<!--ng-container *ngIf="showFormView">
-
-  <div>
-    <h2>Nuevo Usuario</h2>
-    <app-formulario-ngx-formly [formFields]="formFields" [rowData]="selectedRecordData"></app-formulario-ngx-formly>
- 
-  </div>
-</ng-container-->
-
-</mat-card-content>
-</mat-card>
+  <!-- Add user form -->
+  <ng-container *ngIf="!hasChildRoute && isAddMode">
+    <header class="page-header">
+      <h1 class="page-title">New user</h1>
+    </header>
+    <mat-card class="form-card">
+      <mat-card-content>
+        <form (ngSubmit)="onCreateUserSubmit()" class="user-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="createEmail" name="createEmail" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="createPassword" name="createPassword" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Full name</mat-label>
+            <input matInput [(ngModel)]="createFullName" name="createFullName" />
+          </mat-form-field>
+          <p class="form-error" *ngIf="createError">{{ createError }}</p>
+          <div class="form-actions">
+            <button mat-button type="button" (click)="cancelCreate()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit">Create user</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</div>

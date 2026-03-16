@@ -1,0 +1,24 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1 class="page-title">New product</h1>
+  </header>
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form (ngSubmit)="submit()" class="entity-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="title" name="title" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="description" name="description" />
+        </mat-form-field>
+        <p *ngIf="error" class="form-error">{{ error }}</p>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="cancel()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit">Create</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,3 +1,6 @@
+import os
+from urllib.parse import quote_plus
+
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy import create_engine, Column, Integer, String
@@ -14,10 +17,19 @@ from fastapi import Path
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:4200",  # Agrega el dominio de tu aplicación Angular aquí
-]
+
+def _parse_origins() -> list[str]:
+    raw = os.getenv("BACKEND_CORS_ORIGINS", "")
+    if raw.strip():
+        return [o.strip() for o in raw.split(",") if o.strip()]
+    return [
+        "http://localhost",
+        "http://localhost:4200",
+        "capacitor://localhost",
+    ]
+
+
+origins = _parse_origins()
 
 # Agregar el middleware CORS
 app.add_middleware(
@@ -28,11 +40,26 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-# Configuración de la base de datos
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:admin@localhost/java_test2"
+# Configuración de la base de datos (env on EC2/Docker; localhost fallback for local dev)
+def _database_url() -> str:
+    explicit = os.getenv("DATABASE_URL")
+    if explicit:
+        return explicit
+    user = os.getenv("POSTGRES_USER", "postgres")
+    password = os.getenv("POSTGRES_PASSWORD", "admin")
+    host = os.getenv("POSTGRES_SERVER", "localhost")
+    port = os.getenv("POSTGRES_PORT", "5432")
+    db = os.getenv("POSTGRES_DB", "java_test2")
+    return (
+        f"postgresql://{quote_plus(user)}:{quote_plus(password)}"
+        f"@{host}:{port}/{db}"
+    )
+
+
+SQLALCHEMY_DATABASE_URL = _database_url()
 
 # Configuración de seguridad para la generación de tokens JWT
-SECRET_KEY = "tu_clave_secreta"
+SECRET_KEY = os.getenv("SECRET_KEY", "tu_clave_secreta")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

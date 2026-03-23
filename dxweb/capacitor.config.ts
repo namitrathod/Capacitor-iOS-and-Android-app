@@ -1,11 +1,11 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.dxweb',
-  appName: 'DxWeb',
+  appId: 'com.example.splitkit',
+  appName: 'SplitKit',
   webDir: 'dist/dxweb',
   server: {
-    // Load app from PC so WebView can reach backend (run: npm run serve:mobile)
+    // Dev only: point to your machine IP + dev server port. Remove `server` for store builds.
     url: 'http://10.0.0.155:4200',
     cleartext: true,
   },

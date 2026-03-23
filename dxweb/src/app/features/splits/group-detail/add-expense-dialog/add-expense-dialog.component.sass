@@ -1,0 +1,106 @@
+.dlg-error
+  margin: 12px 12px 0
+  font-size: 0.875rem
+  color: var(--color-error)
+
+.dlg-shell
+  height: 100%
+  display: flex
+  flex-direction: column
+
+.dlg-topbar
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: max(10px, env(safe-area-inset-top, 0px)) 6px 10px
+  border-bottom: 1px solid var(--color-border)
+  background: var(--color-surface)
+
+.dlg-topbar__title
+  font-weight: 800
+  letter-spacing: -0.02em
+  font-size: 1.15rem
+  flex: 1
+  text-align: center
+  padding: 0 8px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.dlg-topbar__save
+  min-width: 70px
+
+.dlg-scroll
+  flex: 1
+  overflow: auto
+  padding: 12px 12px 28px
+
+.dlg-chiprow
+  display: flex
+  align-items: center
+  gap: 10px
+  margin: 2px 0 14px
+
+.dlg-chiprow__icon
+  color: var(--color-accent)
+
+.dlg-chiprow__label
+  color: var(--color-text-secondary)
+  font-size: 0.9rem
+
+.dlg-chip
+  display: inline-flex
+  align-items: center
+  padding: 6px 10px
+  border-radius: var(--radius-full)
+  border: 1px solid var(--color-border)
+  background: var(--color-bg-subtle)
+  font-weight: 600
+  font-size: 0.875rem
+
+.dlg-form
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+.dlg-desc,
+.dlg-amt
+  width: 100%
+
+.dlg-paidrow
+  display: flex
+  align-items: center
+  gap: 10px
+  flex-wrap: wrap
+
+.dlg-paidrow__label
+  font-weight: 800
+  color: var(--color-text-secondary)
+  font-size: 0.95rem
+
+.dlg-paidrow__select
+  width: 160px
+
+.dlg-paidrow__split
+  color: var(--color-text-secondary)
+  font-weight: 600
+
+.dlg-splitlead
+  margin-top: 2px
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+.dlg-splitlead__hint
+  color: var(--color-text-secondary)
+  font-size: 0.8125rem
+  font-weight: 600
+
+.dlg-checks
+  display: flex
+  flex-direction: column
+  gap: 6px
+  margin-top: 2px
+
+

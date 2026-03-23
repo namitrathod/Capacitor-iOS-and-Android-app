@@ -1,0 +1,228 @@
+<div class="sw-page" *ngIf="group">
+  <header class="sw-toolbar">
+    <button mat-icon-button type="button" (click)="back()" aria-label="Back to groups">
+      <mat-icon>arrow_back_ios_new</mat-icon>
+    </button>
+    <div class="sw-toolbar__titles">
+      <h1 class="sw-toolbar__name">{{ group.name }}</h1>
+      <p class="sw-toolbar__meta">{{ group.members.length }} {{ group.members.length === 1 ? 'member' : 'members' }}</p>
+    </div>
+    <button mat-icon-button type="button" [matMenuTriggerFor]="groupMenu" aria-label="Group menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #groupMenu="matMenu">
+      <button mat-menu-item type="button" (click)="leave()">
+        <mat-icon>logout</mat-icon>
+        <span>Leave group</span>
+      </button>
+    </mat-menu>
+  </header>
+
+  <p class="sw-error" *ngIf="error" role="alert">{{ error }}</p>
+
+  <section
+    class="sw-balance-hero"
+    *ngIf="balances"
+    [class.sw-balance-hero--owed]="myBalanceState === 'owed'"
+    [class.sw-balance-hero--owe]="myBalanceState === 'owe'"
+    [class.sw-balance-hero--settled]="myBalanceState === 'settled'"
+    aria-live="polite"
+  >
+    <p class="sw-balance-hero__label">{{ myBalanceHeadline }}</p>
+    <p class="sw-balance-hero__amount" *ngIf="myBalanceState !== 'settled'">{{ myBalanceAbs | currency }}</p>
+    <p class="sw-balance-hero__settled" *ngIf="myBalanceState === 'settled'">
+      <mat-icon>check_circle</mat-icon>
+      <span>Nothing to pay or request in this group.</span>
+    </p>
+  </section>
+
+  <mat-tab-group animationDuration="0ms" class="sw-tabs" mat-stretch-tabs="false" dynamicHeight>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="sw-tab-icon">receipt_long</mat-icon>
+        Expenses
+      </ng-template>
+      <div class="sw-tab-body">
+        <mat-card class="sw-add-card" appearance="outlined" *ngIf="showAddExpense">
+          <div class="sw-add-card__head">
+            <div>
+              <h2 class="sw-add-card__title">Add expense</h2>
+              <p class="sw-add-card__sub">Split evenly across selected people</p>
+            </div>
+          </div>
+          <mat-card-content>
+            <div class="sw-form-row">
+              <mat-form-field appearance="outline" class="sw-grow">
+                <mat-label>Description</mat-label>
+                <input matInput [(ngModel)]="expDescription" name="expDesc" placeholder="Dinner, rent, Uber…" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="sw-amount">
+                <mat-label>Amount</mat-label>
+                <input matInput type="number" name="expAmt" min="0.01" step="0.01" [(ngModel)]="expAmount" />
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline" class="sw-full">
+              <mat-label>Paid by</mat-label>
+              <mat-select [(ngModel)]="expPaidBy" name="expPaidBy">
+                <mat-option *ngFor="let m of group.members" [value]="m.user_id">
+                  {{ m.full_name || m.email }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p class="sw-label">Split between</p>
+            <p class="sw-hint">Uncheck anyone who shouldn’t share this expense.</p>
+            <div class="sw-checks">
+              <mat-checkbox
+                *ngFor="let m of group.members"
+                [checked]="isParticipant(m.user_id)"
+                (change)="setParticipant(m.user_id, $event.checked)"
+              >
+                {{ m.full_name || m.email }}
+              </mat-checkbox>
+            </div>
+            <div class="sw-actions">
+              <button mat-raised-button color="primary" type="button" (click)="submitExpense()" [disabled]="savingExpense">
+                <mat-icon>add</mat-icon>
+                {{ savingExpense ? 'Saving…' : 'Save' }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="sw-feed-head">
+          <h2 class="sw-feed-head__title">Activity</h2>
+        </div>
+
+        <div class="sw-feed" *ngIf="sortedExpenses.length > 0">
+          <div class="sw-expense" *ngFor="let e of sortedExpenses">
+            <div class="sw-expense__avatar" aria-hidden="true">{{ expenseInitial(e) }}</div>
+            <div class="sw-expense__main">
+              <span class="sw-expense__title">{{ e.description }}</span>
+              <span class="sw-expense__meta">{{ memberLabel(e.paid_by_user_id) }} paid · {{ formatDateShort(e.created_at) }}</span>
+            </div>
+            <span class="sw-expense__amount">{{ e.amount | currency }}</span>
+            <button mat-icon-button type="button" class="sw-expense__del" (click)="removeExpense(e)" aria-label="Delete expense">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="sw-empty" *ngIf="sortedExpenses.length === 0">
+          <mat-icon>post_add</mat-icon>
+          <p>No expenses yet.</p>
+          <p class="sw-empty__hint" *ngIf="!isDesktop && !showAddExpense">Tap + to add the first one.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="sw-tab-icon">account_balance</mat-icon>
+        Balances
+      </ng-template>
+      <div class="sw-tab-body" *ngIf="balances as b">
+        <h3 class="sw-section-title">Simplified debts</h3>
+        <p class="sw-section-hint">Fewest transfers to settle up (for reference).</p>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          class="sw-settle-cta"
+          *ngIf="mySettlements.length > 0 && myBalanceState !== 'settled'"
+          (click)="openSettleUpDialog()"
+        >
+          <mat-icon>check</mat-icon>
+          Settle for you
+        </button>
+
+        <div class="sw-settlements" *ngIf="mySettlements.length > 0">
+          <div class="sw-settlement" *ngFor="let s of mySettlements">
+            <mat-icon class="sw-settlement__icon">swap_horiz</mat-icon>
+            <div class="sw-settlement__text">
+              <span><strong>{{ s.from_email }}</strong> pays <strong>{{ s.to_email }}</strong></span>
+              <span class="sw-settlement__amt">{{ s.amount | currency }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="sw-empty sw-empty--tight" *ngIf="mySettlements.length === 0">
+          <mat-icon>check_circle_outline</mat-icon>
+          <p>Everyone’s even — nothing to settle.</p>
+        </div>
+
+        <h3 class="sw-section-title sw-section-title--spaced">Group totals</h3>
+        <p class="sw-section-hint">Positive = overall others owe that person; negative = they owe others.</p>
+        <div class="sw-balance-list">
+          <div
+            class="sw-balance-row"
+            *ngFor="let row of orderedBalances(b.balances)"
+            [class.sw-balance-row--me]="row.user_id === currentUserId"
+          >
+            <div class="sw-balance-row__avatar">{{ memberInitials({ user_id: row.user_id, email: row.email, full_name: row.full_name }) }}</div>
+            <div class="sw-balance-row__main">
+              <span class="sw-balance-row__name">{{ row.full_name || row.email }}</span>
+              <span class="sw-balance-row__email" *ngIf="row.full_name">{{ row.email }}</span>
+            </div>
+            <span
+              class="sw-balance-row__amt"
+              [class.sw-balance-row__amt--pos]="row.balance > 0"
+              [class.sw-balance-row__amt--neg]="row.balance < 0"
+            >
+              {{ row.balance | currency }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="sw-tab-icon">group</mat-icon>
+        People
+      </ng-template>
+      <div class="sw-tab-body">
+        <ul class="sw-member-list" aria-label="Group members">
+          <li class="sw-member" *ngFor="let m of group.members">
+            <div class="sw-member__avatar" aria-hidden="true">{{ memberInitials(m) }}</div>
+            <div class="sw-member__text">
+              <span class="sw-member__primary">{{ m.full_name || m.email }}</span>
+              <span class="sw-member__secondary" *ngIf="m.full_name">{{ m.email }}</span>
+            </div>
+          </li>
+        </ul>
+
+        <mat-divider class="sw-divider"></mat-divider>
+
+        <h3 class="sw-section-title">Add someone</h3>
+        <p class="sw-section-hint">Use their signup email.</p>
+        <div class="sw-add-inline">
+          <mat-form-field appearance="outline" class="sw-grow">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" name="addEmail" [(ngModel)]="addEmail" placeholder="name@example.com" autocomplete="email" />
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="button" (click)="addMember()" [disabled]="addingMember || !addEmail.trim()">
+            {{ addingMember ? 'Adding…' : 'Add' }}
+          </button>
+        </div>
+        <p class="sw-member-error" *ngIf="memberError" role="alert">{{ memberError }}</p>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <button
+    *ngIf="!isDesktop"
+    mat-fab
+    color="primary"
+    type="button"
+    class="sw-fab"
+    (click)="openAddExpenseDialog()"
+    aria-label="Add expense"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<div class="sw-loading" *ngIf="loading" aria-busy="true">
+  <mat-spinner diameter="44"></mat-spinner>
+  <span class="sr-only">Loading group</span>
+</div>

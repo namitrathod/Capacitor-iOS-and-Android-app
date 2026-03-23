@@ -1,0 +1,47 @@
+<div class="gl-page">
+  <header class="gl-hero">
+    <h1 class="gl-hero__title">Your groups</h1>
+  </header>
+
+  <p class="gl-error" *ngIf="error" role="alert">{{ error }}</p>
+
+  <section class="gl-list-wrap" *ngIf="!loading">
+    <div class="gl-cards" *ngIf="groups.length > 0">
+      <a
+        class="gl-card"
+        *ngFor="let g of groups"
+        [routerLink]="['/groups', g.id]"
+        [ngStyle]="groupAccent(g.id)"
+      >
+        <div class="gl-card__tile" aria-hidden="true">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="gl-card__body">
+          <span class="gl-card__name">{{ g.name }}</span>
+          <span class="gl-card__hint">Tap to open</span>
+        </div>
+        <mat-icon class="gl-card__chev">chevron_right</mat-icon>
+      </a>
+    </div>
+    <div class="gl-empty" *ngIf="groups.length === 0">
+      <mat-icon>inbox</mat-icon>
+      <p class="gl-empty__title">No groups yet</p>
+      <p class="gl-empty__text">Create one to start splitting.</p>
+    </div>
+  </section>
+
+  <div class="gl-loading" *ngIf="loading" aria-busy="true">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span class="sr-only">Loading groups</span>
+  </div>
+
+  <a
+    mat-fab
+    color="primary"
+    class="gl-fab"
+    routerLink="/groups/new"
+    aria-label="Create group"
+  >
+    <mat-icon>add</mat-icon>
+  </a>
+</div>

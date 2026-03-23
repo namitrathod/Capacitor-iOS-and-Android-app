@@ -1,0 +1,44 @@
+<section class="act-page" aria-labelledby="act-heading">
+  <header class="act-header">
+    <h1 id="act-heading">Activity</h1>
+    <p>Recent transactions involving you across all groups.</p>
+  </header>
+
+  <p class="act-error" *ngIf="error" role="alert">{{ error }}</p>
+
+  <div class="act-list" *ngIf="!loading && items.length > 0">
+    <article class="act-item" *ngFor="let i of items">
+      <div class="act-item__date">{{ formatDate(i.created_at) }}</div>
+      <div class="act-item__main">
+        <div class="act-item__title">{{ i.description }}</div>
+        <div class="act-item__meta">{{ i.group_name }} · {{ i.paid_by_name }} paid {{ i.total_amount | currency }}</div>
+      </div>
+      <div
+        class="act-item__amount"
+        [class.is-positive]="i.user_net_amount > 0"
+        [class.is-negative]="i.user_net_amount < 0"
+      >
+        <span class="act-item__label">
+          {{
+            i.direction === 'you_lent'
+              ? 'you paid'
+              : i.direction === 'you_owe'
+              ? 'you owe'
+              : 'settled'
+          }}
+        </span>
+        <span>{{ (i.direction === 'settled' ? 0 : (i.user_net_amount < 0 ? -i.user_net_amount : i.user_net_amount)) | currency }}</span>
+      </div>
+    </article>
+  </div>
+
+  <div class="act-empty" *ngIf="!loading && items.length === 0">
+    <mat-icon>timeline</mat-icon>
+    <p>No activity yet.</p>
+  </div>
+
+  <div class="act-loading" *ngIf="loading" aria-busy="true">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</section>
+

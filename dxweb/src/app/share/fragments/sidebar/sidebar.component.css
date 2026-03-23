@@ -3,7 +3,7 @@
   min-height: 0;
   width: var(--sidebar-width) !important;
   max-width: var(--sidebar-width) !important;
-  background: var(--color-surface-alt) !important;
+  background: var(--color-surface) !important;
   border-right: 1px solid var(--color-border) !important;
 }
 
@@ -15,34 +15,45 @@
   width: var(--sidebar-width) !important;
   max-width: var(--sidebar-width) !important;
   border-right: none !important;
-  background: var(--color-surface-alt) !important;
+  background: var(--color-surface) !important;
   box-shadow: none !important;
-  padding-top: var(--space-8);
+  padding: var(--space-12) 0 var(--space-16);
 }
 
 .nav {
-  padding: var(--space-8) 0;
+  padding: 0 var(--space-8);
+}
+
+.nav-section-label {
+  margin: 0 0 var(--space-8);
+  padding: 0 var(--space-12);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
 }
 
 .nav a {
-  margin: 2px 10px;
+  margin: 2px 0;
   border-radius: var(--radius-sm);
-  height: 42px;
-  font-size: 0.9375rem;
+  height: 40px;
+  font-size: var(--text-md);
   font-weight: 500;
   color: var(--color-text-secondary);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
   position: relative;
 }
 
 .nav a:hover {
   background: var(--color-primary-muted);
-  color: var(--color-primary);
+  color: var(--color-accent);
 }
 
 .nav a.active {
   background: var(--color-primary-light);
-  color: var(--color-primary);
+  color: var(--color-accent);
   font-weight: 600;
 }
 
@@ -53,16 +64,28 @@
   top: 50%;
   transform: translateY(-50%);
   width: 3px;
-  height: 24px;
+  height: 22px;
   border-radius: 0 2px 2px 0;
-  background: var(--color-primary);
+  background: var(--color-accent);
 }
 
 .nav a mat-icon {
-  margin-right: 12px;
+  margin-right: var(--space-12);
   color: inherit;
-  opacity: 0.92;
+  opacity: 0.9;
   font-size: 22px;
   width: 22px;
   height: 22px;
+}
+
+/* Mobile drawer: overlay only — zero layout width so main content is full-bleed */
+@media (max-width: 600px) {
+  .sidenav-container {
+    width: 0 !important;
+    max-width: 0 !important;
+    min-width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    flex: 0 0 0 !important;
+  }
 }

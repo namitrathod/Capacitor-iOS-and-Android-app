@@ -1,7 +1,7 @@
 <div class="dashboard">
   <header class="dashboard-header">
-    <h1 class="dashboard-title">Dashboard</h1>
-    <p class="dashboard-subtitle">Overview and quick actions</p>
+    <h1 class="dashboard-title">SplitKit</h1>
+    <p class="dashboard-subtitle">Split bills with friends — simple & even splits</p>
   </header>
 
   <section class="dashboard-welcome">
@@ -9,11 +9,14 @@
       <mat-card-content>
         <div class="welcome-content">
           <div class="welcome-icon-wrap">
-            <mat-icon class="welcome-icon">rocket_launch</mat-icon>
+            <mat-icon class="welcome-icon">account_balance_wallet</mat-icon>
           </div>
           <div>
-            <h2 class="welcome-heading">Welcome back</h2>
-            <p class="welcome-text">Manage your users, product catalog, and sales from one place. Use the sidebar to jump to any section or pick a quick action below.</p>
+            <h2 class="welcome-heading">Shared expenses</h2>
+            <p class="welcome-text">
+              Create a group, invite people by email (they need an account), add expenses, and see who owes
+              whom. Splits are divided equally between whoever you select.
+            </p>
           </div>
         </div>
       </mat-card-content>
@@ -21,32 +24,14 @@
   </section>
 
   <section class="quick-actions">
-    <h2 class="section-title">Quick actions</h2>
+    <h2 class="section-title">Go to</h2>
     <div class="action-cards">
-      <a routerLink="/user" class="action-card">
+      <a routerLink="/groups" class="action-card">
         <mat-card>
           <mat-card-content>
-            <mat-icon class="action-icon">people</mat-icon>
-            <h3 class="action-title">Users</h3>
-            <p class="action-desc">View and manage user accounts</p>
-          </mat-card-content>
-        </mat-card>
-      </a>
-      <a routerLink="/products" class="action-card">
-        <mat-card>
-          <mat-card-content>
-            <mat-icon class="action-icon">inventory_2</mat-icon>
-            <h3 class="action-title">Products</h3>
-            <p class="action-desc">Browse and edit product catalog</p>
-          </mat-card-content>
-        </mat-card>
-      </a>
-      <a routerLink="/sales" class="action-card">
-        <mat-card>
-          <mat-card-content>
-            <mat-icon class="action-icon">point_of_sale</mat-icon>
-            <h3 class="action-title">Sales</h3>
-            <p class="action-desc">Track and record sales</p>
+            <mat-icon class="action-icon">groups</mat-icon>
+            <h3 class="action-title">Your groups</h3>
+            <p class="action-desc">Create groups and log expenses</p>
           </mat-card-content>
         </mat-card>
       </a>

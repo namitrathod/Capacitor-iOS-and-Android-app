@@ -21,6 +21,10 @@ export class RegisterComponent {
   }
 
   register() {
+    if (!this.username.trim()) {
+      this.errorMessage = 'Full name is required';
+      return;
+    }
     this.authService.register(this.username, this.email, this.password).subscribe(
       () => {
         this.router.navigate(['/login']);

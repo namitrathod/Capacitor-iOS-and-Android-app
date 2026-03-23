@@ -1,0 +1,83 @@
+<div class="su-shell">
+  <header class="su-topbar">
+    <button mat-button type="button" (click)="close()" [disabled]="settling">
+      Cancel
+    </button>
+    <div class="su-topbar__title">Split options</div>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="confirm()"
+      [disabled]="settling || previewTransfers.length === 0"
+    >
+      Done
+    </button>
+  </header>
+
+  <div class="su-scroll">
+    <p class="su-sub">
+      Choose how much to settle. Max: <strong>{{ data.maxAmount | currency }}</strong>
+    </p>
+
+    <div class="su-error" *ngIf="error" role="alert">{{ error }}</div>
+
+    <div class="su-modes" aria-label="Settle options">
+      <mat-button-toggle-group name="settleMode" [(ngModel)]="mode" aria-label="Settle mode">
+        <mat-button-toggle value="full">Pay full</mat-button-toggle>
+        <mat-button-toggle value="partial">Pay part</mat-button-toggle>
+        <mat-button-toggle value="custom">Custom</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="su-section" *ngIf="mode === 'partial'">
+      <mat-form-field appearance="outline" class="su-amountField">
+        <mat-label>Amount to settle</mat-label>
+        <span matPrefix>{{ currencySymbol }}</span>
+        <input matInput type="number" min="0" step="0.01" [(ngModel)]="partialAmount" />
+      </mat-form-field>
+      <p class="su-hint">We’ll settle transfers in order until this amount is paid.</p>
+      <p class="su-hint su-hint--warn" *ngIf="partialAmount > maxAllowed">
+        Amount cannot be greater than {{ maxAllowed | number:'1.2-2' }}.
+      </p>
+    </div>
+
+    <div class="su-list">
+      <div class="su-row" *ngFor="let s of previewTransfers" [class.su-row--disabled]="s.amount <= 0.005">
+        <mat-icon class="su-icon">swap_horiz</mat-icon>
+        <div class="su-main">
+          <span class="su-text">
+            <strong>{{ s.from_email }}</strong> pays <strong>{{ s.to_email }}</strong>
+          </span>
+        </div>
+        <span class="su-amt">{{ s.amount | currency }}</span>
+      </div>
+      <div class="su-empty" *ngIf="previewTransfers.length === 0">
+        <mat-icon>check_circle_outline</mat-icon>
+        <p>No amount selected.</p>
+      </div>
+    </div>
+
+    <div class="su-custom" *ngIf="mode === 'custom'">
+      <h3 class="su-customTitle">Adjust transfer amounts</h3>
+      <p class="su-hint su-hint--warn" *ngIf="customTotal > maxAllowed">
+        Total custom amount cannot be greater than {{ maxAllowed | number:'1.2-2' }}.
+      </p>
+      <div class="su-customList">
+        <div class="su-customRow" *ngFor="let d of customDraft">
+          <mat-checkbox [(ngModel)]="d.enabled" class="su-check"></mat-checkbox>
+          <div class="su-customMain">
+            <div class="su-customText">
+              <strong>{{ d.transfer.from_email }}</strong> pays <strong>{{ d.transfer.to_email }}</strong>
+            </div>
+            <mat-form-field appearance="outline" class="su-customAmount">
+              <mat-label>Amount</mat-label>
+              <input matInput type="number" min="0" step="0.01" [(ngModel)]="d.transfer.amount" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

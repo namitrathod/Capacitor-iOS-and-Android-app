@@ -1,0 +1,115 @@
+.acc-page
+  width: 100%
+  max-width: 620px
+  margin: 0 auto
+  padding: 2px 0 28px
+
+.acc-header
+  margin-bottom: 6px
+  display: flex
+  align-items: center
+  justify-content: center
+  min-height: 44px
+  h1
+    margin: 0
+    text-align: center
+    font-size: 1.55rem
+    font-weight: 700
+    letter-spacing: -0.02em
+
+.acc-identity
+  margin: 0 0 10px
+  text-align: center
+  display: flex
+  flex-direction: column
+  gap: 2px
+  strong
+    font-size: 1.05rem
+    color: var(--color-text)
+  span
+    font-size: 0.86rem
+    color: var(--color-text-secondary)
+
+.acc-list
+  border-top: 1px solid var(--color-border)
+  border-bottom: 1px solid var(--color-border)
+  background: var(--color-surface)
+
+.acc-row
+  width: 100%
+  border: 0
+  background: transparent
+  border-top: 1px solid var(--color-border)
+  min-height: 64px
+  padding: 0 10px 0 14px
+  display: flex
+  align-items: center
+  justify-content: space-between
+  text-align: left
+  font-size: 1.01rem
+  color: var(--color-text)
+  &:first-child
+    border-top: 0
+  &:active
+    background: var(--color-bg-subtle)
+
+.acc-row__left
+  display: inline-flex
+  align-items: center
+  gap: 12px
+  mat-icon
+    color: var(--color-text-tertiary)
+    font-size: 22px
+    width: 22px
+    height: 22px
+
+.acc-row__chev
+  color: var(--color-text-placeholder)
+  font-size: 22px
+  width: 22px
+  height: 22px
+
+.acc-full
+  width: 100%
+  display: block
+
+.acc-security
+  border-top: 1px solid var(--color-border)
+  padding: 12px 14px 14px
+  display: flex
+  flex-direction: column
+  gap: 6px
+
+.acc-error
+  margin: 0
+  color: var(--color-error)
+  font-size: 0.82rem
+
+.acc-loading
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 2rem
+
+.acc-logout-wrap
+  text-align: center
+  padding: 24px 8px 10px
+
+.acc-logout
+  min-width: 180px
+  min-height: 46px
+  font-size: 1rem !important
+  font-weight: 700 !important
+  text-transform: none !important
+  border-radius: 999px !important
+
+.acc-logout--brand
+  background: linear-gradient(135deg, var(--sw-teal), var(--sw-teal-dark)) !important
+  color: #fff !important
+  box-shadow: 0 8px 20px rgba(28, 194, 159, 0.24) !important
+
+.acc-footnote
+  margin: 18px 0 0
+  color: var(--color-text-tertiary)
+  font-size: 0.78rem
+

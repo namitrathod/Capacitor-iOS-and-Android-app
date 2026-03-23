@@ -1,39 +1,87 @@
-<div class="auth-page">
-  <div class="auth-card-wrapper">
-    <mat-card class="auth-card">
-      <mat-card-content>
-        <div class="auth-header">
-          <mat-icon class="auth-logo">lock</mat-icon>
-          <h1 class="auth-title">Sign in</h1>
-          <p class="auth-subtitle">Use your email and password to continue</p>
-        </div>
+<div class="auth-page auth-page--split">
+  <aside class="auth-brand-panel" aria-label="Product">
+    <div class="auth-brand-inner">
+      <div class="auth-brand-mark" aria-hidden="true">SK</div>
+      <h2 class="auth-brand-title">SplitKit</h2>
+      <p class="auth-brand-tagline">
+        Shared expenses, transparent balances, and suggested settlements — without the spreadsheet.
+      </p>
+      <ul class="auth-brand-bullets">
+        <li>
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          <span>Equal splits and per-group balances, computed for you.</span>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">groups</mat-icon>
+          <span>Invite people by email once they have an account — instant access, no inbox clutter.</span>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">lock</mat-icon>
+          <span>Sign-in protected; your data stays with your deployment.</span>
+        </li>
+      </ul>
+    </div>
+  </aside>
 
-        <form (ngSubmit)="login()" class="auth-form">
-          <mat-form-field appearance="outline" class="auth-field">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" [(ngModel)]="username" name="username" placeholder="you@example.com" required />
-            <mat-icon matSuffix>mail_outline</mat-icon>
-          </mat-form-field>
+  <div class="auth-form-panel">
+    <div class="auth-card-wrapper">
+      <mat-card class="auth-card" appearance="outlined">
+        <mat-card-content>
+          <div class="auth-header">
+            <mat-icon class="auth-logo" aria-hidden="true">lock</mat-icon>
+            <h1 class="auth-title">Sign in</h1>
+            <p class="auth-subtitle">Use your work email and password to continue.</p>
+          </div>
 
-          <mat-form-field appearance="outline" class="auth-field">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" [(ngModel)]="password" name="password" placeholder="••••••••" minlength="6" required />
-            <mat-icon matSuffix>lock_outline</mat-icon>
-          </mat-form-field>
+          <form (ngSubmit)="login()" class="auth-form">
+            <mat-form-field appearance="outline" class="auth-field">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                [(ngModel)]="username"
+                name="username"
+                placeholder="you@company.com"
+                autocomplete="username"
+                required
+              />
+              <mat-icon matSuffix aria-hidden="true">mail_outline</mat-icon>
+            </mat-form-field>
 
-          <p class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+            <mat-form-field appearance="outline" class="auth-field">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                [(ngModel)]="password"
+                name="password"
+                placeholder="Enter password"
+                minlength="6"
+                autocomplete="current-password"
+                required
+              />
+              <mat-icon matSuffix aria-hidden="true">lock_outline</mat-icon>
+            </mat-form-field>
 
-          <button mat-raised-button color="primary" type="submit" class="auth-submit" [disabled]="!username.trim() || !password">
-            Sign in
-          </button>
-        </form>
+            <p class="auth-error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
 
-        <p class="auth-footer">
-          Don't have an account?
-          <a routerLink="/register" class="auth-link">Create account</a>
-        </p>
-        <p class="auth-debug">API: {{ authService.apiBaseUrl }}</p>
-      </mat-card-content>
-    </mat-card>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="auth-submit"
+              [disabled]="!username.trim() || !password"
+            >
+              Sign in
+            </button>
+          </form>
+
+          <p class="auth-footer">
+            New here?
+            <a routerLink="/register" class="auth-link">Create an account</a>
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

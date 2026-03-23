@@ -1,5 +1,5 @@
 .dashboard {
-  max-width: 1000px;
+  max-width: var(--content-max, 1120px);
   margin: 0 auto;
 }
 
@@ -8,17 +8,20 @@
 }
 
 .dashboard-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.875rem);
   font-weight: 700;
   color: var(--color-text);
   letter-spacing: -0.03em;
   margin: 0 0 var(--space-4);
+  line-height: var(--leading-tight);
 }
 
 .dashboard-subtitle {
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   color: var(--color-text-secondary);
   margin: 0;
+  line-height: var(--leading-relaxed);
+  max-width: 42rem;
 }
 
 .dashboard-welcome {
@@ -26,16 +29,17 @@
 }
 
 .welcome-card {
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-subtle) 100%);
-  transition: box-shadow var(--transition-base);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-raised) 100%);
+  transition: box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-fast) var(--ease-standard);
 }
 
 .welcome-card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
 }
 
 .welcome-card mat-card-content {
@@ -63,20 +67,21 @@
   font-size: 28px;
   width: 28px;
   height: 28px;
-  color: var(--color-primary);
+  color: var(--color-accent);
 }
 
 .welcome-heading {
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   color: var(--color-text);
   margin: 0 0 var(--space-8);
+  letter-spacing: -0.02em;
 }
 
 .welcome-text {
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   margin: 0;
 }
 
@@ -85,11 +90,12 @@
 }
 
 .section-title {
-  font-size: 1rem;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text-tertiary);
   margin: 0 0 var(--space-16);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .action-cards {
@@ -102,21 +108,29 @@
   text-decoration: none;
   color: inherit;
   display: block;
+  border-radius: var(--radius-lg);
 }
 
 .action-card mat-card {
   margin: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, border-color 0.15s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-base) var(--ease-out);
 }
 
 .action-card:hover mat-card {
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card-hover);
   border-color: var(--color-border-strong);
   transform: translateY(-2px);
+}
+
+.action-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .action-card mat-card-content {
@@ -127,27 +141,28 @@
   font-size: 32px;
   width: 32px;
   height: 32px;
-  color: var(--color-primary);
+  color: var(--color-accent);
   margin-bottom: var(--space-12);
 }
 
 .action-title {
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text);
   margin: 0 0 var(--space-4);
+  letter-spacing: -0.01em;
 }
 
 .action-desc {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
   margin: 0;
-  line-height: 1.45;
+  line-height: var(--leading-relaxed);
 }
 
 @media (max-width: 768px) {
   .dashboard {
-    padding: 0 var(--space-16);
+    padding: 0;
   }
 
   .dashboard-title {
@@ -161,10 +176,6 @@
   .welcome-content {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .welcome-text {
-    font-size: 0.9rem;
   }
 
   .action-cards {

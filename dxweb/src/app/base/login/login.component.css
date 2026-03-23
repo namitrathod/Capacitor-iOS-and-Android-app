@@ -1,7 +1,1 @@
-/* Uses global .auth-* styles from styles.sass */
-.auth-debug {
-  font-size: 11px;
-  color: #666;
-  margin-top: 8px;
-  word-break: break-all;
-}
+/* Split layout + card styles live in global styles.sass (.auth-*) */

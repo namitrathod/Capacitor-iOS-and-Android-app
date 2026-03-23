@@ -1,0 +1,157 @@
+.su-shell
+  height: 100%
+  display: flex
+  flex-direction: column
+
+.su-topbar
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: max(10px, env(safe-area-inset-top, 0px)) 6px 10px
+  border-bottom: 1px solid var(--color-border)
+  background: var(--color-surface)
+
+.su-topbar__title
+  flex: 1
+  text-align: center
+  padding: 0 8px
+  font-weight: 800
+  letter-spacing: -0.02em
+  font-size: 1.05rem
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.su-scroll
+  flex: 1
+  overflow: auto
+  padding: 12px 12px 20px
+
+.su-title
+  font-size: 1.15rem
+  font-weight: 800
+  letter-spacing: -0.03em
+
+.su-content
+  padding-top: 6px !important
+
+.su-sub
+  margin: 0 0 14px
+  font-size: 0.875rem
+  color: var(--color-text-secondary)
+  line-height: 1.5
+
+.su-error
+  margin: 8px 0 12px
+  color: var(--color-error)
+  font-size: 0.875rem
+
+.su-list
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+.su-row
+  display: flex
+  align-items: flex-start
+  gap: 12px
+  padding: 12px 12px
+  border-radius: var(--radius-md)
+  border: 1px solid var(--color-border)
+  background: var(--color-surface)
+
+.su-icon
+  flex-shrink: 0
+  color: var(--sw-teal-dark)
+  font-size: 20px
+  width: 20px
+  height: 20px
+  margin-top: 2px
+
+.su-main
+  flex: 1
+  min-width: 0
+  display: flex
+
+.su-amt
+  font-weight: 800
+  letter-spacing: -0.02em
+  white-space: nowrap
+
+.su-empty
+  text-align: center
+  color: var(--color-text-tertiary)
+  font-size: 0.875rem
+  mat-icon
+    font-size: 44px
+    width: 44px
+    height: 44px
+    opacity: 0.6
+    margin-bottom: 8px
+  p
+    margin: 0
+
+.su-actions
+  padding-top: 6px !important
+
+.su-modes
+  margin: 10px 0 14px
+
+.su-section
+  margin: 0 0 14px
+
+.su-amountField
+  width: 100%
+
+.su-hint
+  margin: 6px 0 0
+  font-size: 0.8125rem
+  color: var(--color-text-secondary)
+  line-height: 1.45
+
+.su-hint--warn
+  color: var(--color-error)
+  font-weight: 600
+
+.su-custom
+  margin-top: 18px
+
+.su-customTitle
+  margin: 0 0 10px
+  font-size: 0.9rem
+  font-weight: 800
+  letter-spacing: -0.02em
+
+.su-customList
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+.su-customRow
+  display: flex
+  gap: 10px
+  align-items: flex-start
+  padding: 12px 12px
+  border-radius: var(--radius-md)
+  border: 1px solid var(--color-border)
+  background: var(--color-surface)
+
+.su-check
+  margin-top: 2px
+
+.su-customMain
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.su-customText
+  font-size: 0.875rem
+  color: var(--color-text-secondary)
+  line-height: 1.4
+
+.su-customAmount
+  width: 100%
+

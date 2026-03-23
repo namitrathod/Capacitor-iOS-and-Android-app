@@ -96,6 +96,8 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: str
     FIRST_SUPERUSER_PASSWORD: str
     USERS_OPEN_REGISTRATION: bool = False
+    # When true and ENVIRONMENT=local, inserts split1@…–split4@… demo users (see seed_demo.py)
+    SEED_DEMO_USERS: bool = True
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":

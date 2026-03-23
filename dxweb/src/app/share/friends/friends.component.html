@@ -1,0 +1,43 @@
+<section class="fr-page" aria-labelledby="fr-heading">
+  <header class="fr-header">
+    <h1 id="fr-heading">Friends</h1>
+    <p>Start a one-to-one split between you and one person.</p>
+  </header>
+
+  <mat-form-field appearance="outline" class="fr-search">
+    <mat-label>Search friend</mat-label>
+    <input matInput [(ngModel)]="q" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <p class="fr-error" *ngIf="error" role="alert">{{ error }}</p>
+
+  <div class="fr-list" *ngIf="!loading && filtered.length > 0">
+    <article class="fr-item" *ngFor="let c of filtered">
+      <div class="fr-avatar">{{ (c.full_name || c.email).slice(0, 1).toUpperCase() }}</div>
+      <div class="fr-main">
+        <div class="fr-name">{{ c.full_name || c.email }}</div>
+        <div class="fr-email" *ngIf="c.full_name">{{ c.email }}</div>
+      </div>
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        [disabled]="creatingForId !== null"
+        (click)="splitWith(c)"
+      >
+        {{ creatingForId === c.id ? 'Starting…' : 'Split' }}
+      </button>
+    </article>
+  </div>
+
+  <div class="fr-empty" *ngIf="!loading && filtered.length === 0">
+    <mat-icon>person_search</mat-icon>
+    <p>No friends found.</p>
+  </div>
+
+  <div class="fr-loading" *ngIf="loading" aria-busy="true">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</section>
+

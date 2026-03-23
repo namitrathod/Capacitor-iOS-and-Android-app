@@ -1,0 +1,53 @@
+<section class="acc-page" aria-labelledby="acc-heading">
+  <header class="acc-header" id="acc-heading">
+    <h1>Account</h1>
+  </header>
+  <p class="acc-identity" *ngIf="!loading">
+    <strong>{{ fullName || 'No name set' }}</strong>
+    <span>{{ email }}</span>
+  </p>
+
+  <div class="acc-list" *ngIf="!loading">
+    <button class="acc-row" type="button" (click)="toggleSecurity()">
+      <span class="acc-row__left">
+        <span>Security</span>
+      </span>
+      <mat-icon class="acc-row__chev">{{ showSecurity ? 'expand_less' : 'chevron_right' }}</mat-icon>
+    </button>
+
+    <div class="acc-security" *ngIf="showSecurity">
+      <p class="acc-error" *ngIf="error" role="alert">{{ error }}</p>
+      <mat-slide-toggle
+        [checked]="faceIdEnabled"
+        (change)="toggleFaceId($event.checked)"
+      >
+        Authenticate with Face ID
+      </mat-slide-toggle>
+    </div>
+
+    <button class="acc-row" type="button" (click)="goPrivacy()">
+      <span class="acc-row__left"><span>Privacy Policy</span></span>
+      <mat-icon class="acc-row__chev">chevron_right</mat-icon>
+    </button>
+
+    <button class="acc-row" type="button" (click)="goTerms()">
+      <span class="acc-row__left"><span>Terms of Service</span></span>
+      <mat-icon class="acc-row__chev">chevron_right</mat-icon>
+    </button>
+
+    <button class="acc-row" type="button" (click)="contactUs()">
+      <span class="acc-row__left"><span>Contact us</span></span>
+      <mat-icon class="acc-row__chev">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="acc-logout-wrap" *ngIf="!loading">
+    <button mat-raised-button color="primary" type="button" class="acc-logout acc-logout--brand" (click)="logout()">Log out</button>
+    <p class="acc-footnote">Made with :) · SplitKit</p>
+  </div>
+
+  <div class="acc-loading" *ngIf="loading" aria-busy="true">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</section>
+

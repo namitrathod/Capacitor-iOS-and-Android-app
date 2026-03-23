@@ -1,0 +1,96 @@
+.gc-page
+  width: 100%
+  max-width: 560px
+  margin: 0 auto
+  box-sizing: border-box
+  padding: 0 0 110px
+
+.gc-toolbar
+  display: flex
+  align-items: flex-start
+  gap: 6px
+  margin: 0 0 14px
+  padding: 8px 0 12px
+  position: sticky
+  top: 0
+  z-index: 6
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent)
+  backdrop-filter: blur(10px)
+  border-bottom: 1px solid var(--color-border)
+  @media (min-width: 640px)
+    margin: 0 0 16px
+    top: 0
+    padding: 4px 0 16px
+
+.gc-toolbar__titles
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  justify-content: center
+
+.gc-title
+  margin: 0 0 4px
+  font-size: 1.35rem
+  font-weight: 800
+  letter-spacing: -0.04em
+
+.gc-sub
+  margin: 0
+  font-size: 0.875rem
+  line-height: 1.5
+  color: var(--color-text-secondary)
+
+.gc-callout
+  display: flex
+  gap: 12px
+  align-items: flex-start
+  padding: 12px 14px
+  margin-bottom: 18px
+  border-radius: var(--radius-md)
+  background: var(--sw-teal-subtle)
+  border: 1px solid color-mix(in srgb, var(--sw-teal) 22%, transparent)
+  font-size: 0.8125rem
+  line-height: 1.5
+  color: var(--color-text-secondary)
+  mat-icon
+    flex-shrink: 0
+    color: var(--sw-teal-dark)
+    font-size: 20px
+    width: 20px
+    height: 20px
+    margin-top: 1px
+  strong
+    color: var(--color-text)
+  p
+    margin: 0
+
+.gc-card
+  mat-card-content
+    padding-top: 18px !important
+    padding-bottom: 18px !important
+
+.gc-full
+  width: 100%
+  display: block
+
+.gc-error
+  margin: 10px 0 6px
+  font-size: 0.8125rem
+  color: var(--color-error)
+
+.gc-btn
+  width: 100%
+  margin-top: 12px
+  min-height: 48px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  mat-icon
+    margin-right: 6px
+    vertical-align: middle
+    font-size: 20px
+    width: 20px
+    height: 20px
+

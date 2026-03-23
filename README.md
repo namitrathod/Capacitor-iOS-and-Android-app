@@ -1,95 +1,59 @@
-## Repository Name: StarterKit-Angular-FastAPI-Material
+## SplitKit — simplified Splitwise-style app
 
-### Description
+Full-stack template reworked into a **bill-splitting** app: **Angular + Material** frontend, **FastAPI + SQLModel** backend, **PostgreSQL**.
 
-Welcome to the StarterKit-Angular-FastAPI-Material repository, your ultimate starting point for developing scalable and robust web projects. This repository integrates modern technologies including Angular, Formly.dev, Material Design for Angular, Python with FastAPI, and PostgreSQL as the relational database, providing a comprehensive foundation for your web development endeavors.
+### What you can do
 
-### Key Features
+- **Register / log in**
+- **Create groups** (trip, apartment, etc.) and **invite members by email** (they must already have an account)
+- **Add expenses**: who paid, amount, description, **split evenly** among selected members
+- See **balances** (who is up/down) and **suggested settlements** (minimum transfers)
 
-1. **Angular:** A frontend development framework offering a modular structure for building dynamic and responsive user interfaces.
-   
-2. **Formly.dev:** Simplifies form creation in Angular with a clean, declarative syntax and built-in validation features.
-   
-3. **Material Design for Angular:** Utilizes Material Design components specifically tailored for Angular, facilitating the creation of visually appealing and consistent user interfaces.
-   
-4. **FastAPI:** An efficient Python library for building asynchronous web APIs, offering high performance and seamless integration with Angular through native JSON support.
-   
-5. **Python:** A versatile and powerful programming language used for backend development, known for its readability and ease of maintenance.
-   
-6. **PostgreSQL:** A robust relational database solution ensuring data integrity and transactional consistency for storing project data.
+### Project layout
 
-### Repository Structure
+- **`dxweb/`** — Angular app (brand: **SplitKit**). API URL: `src/environments/environment.ts` (`apiUrl`, e.g. `http://localhost:8000/api/v1`). For a physical device, use your PC’s LAN IP and ensure the backend allows CORS / runs with `ENVIRONMENT=local` for dev.
+- **`dxbackend/`** — FastAPI app (`app/main.py`). Main API under `/api/v1`: `login`, `users`, **`groups`** (split groups & expenses).
 
-- **dxweb/:** Contains the source code of the Angular frontend.
-  
-- **dxbackend/:** Includes the codebase for the FastAPI backend developed in Python.
-  
-- **database/:** Houses scripts and configurations related to the PostgreSQL database.
-  
-- **docs/:** Provides comprehensive documentation for getting started with the StarterKit and integrating additional features.
-  
-- **LICENSE:** Open-source license defining the terms of code usage within the repository.
-  
-- **README.md:** Primary documentation file offering an overview of the project, installation instructions, and useful links for developers.
+### Backend dev
 
-Begin your journey in building powerful and scalable web applications today with the StarterKit Angular-FastAPI-Material repository!
-
-
-
-### Running the Backend (FastAPI):
-Install Dependencies:
-Ensure you have Python and pip installed on your system. Then, install FastAPI and Uvicorn (an ASGI server) using pip if you haven't already:
+From `dxbackend/` (with venv and dependencies installed per your team’s setup):
 
 ```bash
-pip install fastapi uvicorn
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Setup the Backend:
+Configure `.env` (see backend template) including `FIRST_SUPERUSER`, database URLs, and optionally `USERS_OPEN_REGISTRATION=true` for open signup.
 
-Create your backend using FastAPI. You can follow the example I provided earlier to create a Python file named main.py that defines routes and backend logic.
-Run the Backend Server:
+New DB tables: `split_group`, `group_member`, `expense`, `expenseshare`. Alembic revision `f7a2b9c1d4e5` replaces the old `item` (and `sale` if present) schema; fresh installs also get tables via `SQLModel.metadata.create_all` in `init_db`.
 
-From the terminal, navigate to the directory where your main.py file is located.
-Run the following command to start the server:
+### Frontend dev
+
+From `dxweb/`:
 
 ```bash
-uvicorn main:app --reload
+npm install
+ng serve
 ```
 
-### Install Angular CLI:
-Make sure you have Node.js and npm installed on your system. Then, install Angular CLI globally if you haven't already:
+Sign in, then open **Groups** to use the app.
 
-```bash
-npm install -g @angular/cli
-```
+UI is **mobile-first**: safe-area insets, full-width content on phones (nav is a slide-over drawer), `100dvh` on auth, 16px base text on small screens.
 
-### Setup the Frontend:
+### Local demo users (PostgreSQL)
 
-Navigate to your Angular project directory.
-Run the following command to start the development server:
+When `ENVIRONMENT=local` and `SEED_DEMO_USERS=true` (default), the API creates **four test accounts** on startup if they don’t exist yet:
 
-```bash
-ng serve --open
-```
+| Email | Display name | Password (all the same) |
+|-------|----------------|-------------------------|
+| `split1@splitkit.test` | Alex | `Test1234!` |
+| `split2@splitkit.test` | Blake | `Test1234!` |
+| `split3@splitkit.test` | Casey | `Test1234!` |
+| `split4@splitkit.test` | Dana | `Test1234!` |
 
-This will automatically open your app in the default browser. If it doesn't open automatically, you can access it at http://localhost:4200.
-Interacting with the Project:
-Once both servers are running (the backend on one port, e.g., 8000, and the frontend on another port, e.g., 4200), you can interact with your application by accessing the URL of the frontend server in your browser.
-The frontend will interact with the backend via HTTP requests to the routes defined in your FastAPI server, enabling the full functionality of your application.
-I hope these steps help you successfully run your project! If you encounter any issues, feel free to ask.
+**Try it:** log in as `split1@splitkit.test`, create a group, and in “Add people by email” paste `split2@splitkit.test`, `split3@splitkit.test`, etc. (comma or newline). Then add expenses and open **Balances**.
 
-<p align="center">
-  <img src="docs/login.png">
-</p>
-<p align="center">
-  <img src="docs/sign up.png" >
-</p>
-<p align="center">
-  <img src="docs/user.png" >
-</p>
-<p align="center">
-  <img src="docs/filter.png" >
-</p>
+To disable seeding, set `SEED_DEMO_USERS=false` in `dxbackend/.env`.
 
+### Legacy
 
-
+The previous starter (users CRUD, products/items, sales) has been **removed** in favor of the split-expense domain.

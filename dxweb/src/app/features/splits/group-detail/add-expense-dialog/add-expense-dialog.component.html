@@ -1,0 +1,80 @@
+<div class="dlg-shell">
+  <header class="dlg-topbar">
+    <button mat-icon-button type="button" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="dlg-topbar__title">Add an expense</div>
+
+    <button
+      mat-button
+      type="button"
+      color="primary"
+      class="dlg-topbar__save"
+      (click)="submit()"
+      [disabled]="saving"
+    >
+      {{ saving ? 'Saving…' : 'Save' }}
+    </button>
+  </header>
+
+  <div class="dlg-scroll">
+    <div class="dlg-chiprow">
+      <mat-icon class="dlg-chiprow__icon">home</mat-icon>
+      <span class="dlg-chiprow__label">With you and:</span>
+      <span class="dlg-chip">
+        {{ data.groupName ? ('All of ' + data.groupName) : 'All of Home' }}
+      </span>
+    </div>
+
+    <div class="dlg-error" *ngIf="error" role="alert">{{ error }}</div>
+
+    <div class="dlg-form">
+      <mat-form-field appearance="outline" class="dlg-desc">
+        <mat-label>Enter a description</mat-label>
+        <input
+          matInput
+          [(ngModel)]="description"
+          name="expDesc"
+          placeholder="Dinner, rent, Uber…"
+          autocomplete="off"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="dlg-amt">
+        <mat-label>Amount</mat-label>
+        <span matPrefix>$&nbsp;</span>
+        <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="amount" name="expAmt" />
+      </mat-form-field>
+
+      <div class="dlg-paidrow">
+        <span class="dlg-paidrow__label">Paid by</span>
+        <mat-form-field appearance="outline" class="dlg-paidrow__select">
+          <mat-select [(ngModel)]="paidByUserId" name="expPaidBy">
+            <mat-option *ngFor="let m of data.members" [value]="m.user_id">
+              {{ paidByLabel(m) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <span class="dlg-paidrow__split">and split equally</span>
+      </div>
+
+      <div class="dlg-splitlead">
+        <strong>Split with</strong>
+        <span class="dlg-splitlead__hint">Uncheck anyone who shouldn’t share this expense.</span>
+      </div>
+
+      <div class="dlg-checks">
+        <mat-checkbox
+          *ngFor="let m of data.members"
+          [checked]="isParticipant(m.user_id)"
+          (change)="setParticipant(m.user_id, $event.checked)"
+        >
+          {{ m.user_id === currentUserId ? 'You' : (m.full_name || m.email) }}
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -6,16 +6,16 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './base/login/login.component';
 import { RegisterComponent } from './base/register/register.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Importa el HttpClientModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatTableModule } from '@angular/material/table'; // Import MatTableModule
-import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -32,25 +32,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
-import { UserTableComponent } from './base/user/user-table/user-table.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { NgxAngularQueryBuilderModule } from "ngx-angular-query-builder";
+import { NgxAngularQueryBuilderModule } from 'ngx-angular-query-builder';
 import { FormularioNgxFormlyComponent } from './web/component/base/formulario-ngx-formly/formulario-ngx-formly.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { SharedModule } from './share/shared.module';
-import { UserModule } from './base/user/user.module';
 import { AuthInterceptor } from './base/service/auth-interceptor.service';
-import { ProductModule } from './features/product/product.module';
-import { SalesModule } from './features/sales/sales.module';
-
-
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent,        
+    RegisterComponent,
     FormComponent,
     FormularioNgxFormlyComponent,
   ],
@@ -87,7 +81,7 @@ import { SalesModule } from './features/sales/sales.module';
     MatChipsModule,
     FormlyModule.forRoot(),
     FormlyMaterialModule,
-    UserModule,
+    SharedModule,
   ],
   exports: [FormComponent],
   providers: [

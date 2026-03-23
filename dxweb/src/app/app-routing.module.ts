@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './base/login/login.component';
-import { UserTableComponent } from './base/user/user-table/user-table.component';
 import { RegisterComponent } from './base/register/register.component';
 import { MainShellComponent } from './share/fragments/main-shell/main-shell.component';
 import { DashboardComponent } from './share/dashboard/dashboard.component';
+import { AccountSettingsComponent } from './share/account-settings/account-settings.component';
+import { ActivityComponent } from './share/activity/activity.component';
+import { FriendsComponent } from './share/friends/friends.component';
 import { AuthGuard } from './core/guards/auth.guard';
-
-/*
-const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'user', component: UserTableComponent },
-  { path: 'user/edit/:id', component: UserTableComponent },
-  { path: 'user/add', component: UserTableComponent },
-  { path: '**', redirectTo: '' }
-];*/
+import { PrivacyComponent } from './share/privacy/privacy.component';
+import { TermsComponent } from './share/privacy/terms.component';
 
 export const routes: Routes = [
   {
@@ -26,25 +19,15 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+      { path: 'friends', component: FriendsComponent, canActivate: [AuthGuard] },
+      { path: 'activity', component: ActivityComponent, canActivate: [AuthGuard] },
+      { path: 'account', component: AccountSettingsComponent, canActivate: [AuthGuard] },
+      { path: 'privacy', component: PrivacyComponent },
+      { path: 'terms', component: TermsComponent },
       {
-        path: 'user',
-        component: UserTableComponent,
-        canActivate: [AuthGuard],
-        children: [
-          { path: 'edit/:id', component: UserTableComponent },
-          { path: 'add', component: UserTableComponent },
-        ],
-      },
-      {
-        path: 'products',
+        path: 'groups',
         loadChildren: () =>
-          import('./features/product/product.module').then((m) => m.ProductModule),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'sales',
-        loadChildren: () =>
-          import('./features/sales/sales.module').then((m) => m.SalesModule),
+          import('./features/splits/splits.module').then((m) => m.SplitsModule),
         canActivate: [AuthGuard],
       },
       { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -55,6 +38,6 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

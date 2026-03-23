@@ -1,0 +1,59 @@
+<div class="gc-page">
+  <header class="gc-toolbar">
+    <button mat-icon-button type="button" (click)="back()" aria-label="Back to groups">
+      <mat-icon>arrow_back_ios_new</mat-icon>
+    </button>
+    <div class="gc-toolbar__titles">
+      <h1 class="gc-title">Create group</h1>
+      <p class="gc-sub">Name it, optionally add people, then start logging expenses.</p>
+    </div>
+  </header>
+
+  <div class="gc-callout" role="note">
+    <mat-icon>info</mat-icon>
+    <p>
+      Users you add must be registered in <strong>SplitKit</strong>.
+    </p>
+  </div>
+
+  <mat-card appearance="outlined" class="gc-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="gc-full">
+        <mat-label>Group name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="newName"
+          name="groupName"
+          autocomplete="off"
+          placeholder="Trip, apartment, team dinner…"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="gc-full">
+        <mat-label>People by email (optional)</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          name="emails"
+          [(ngModel)]="newMemberEmails"
+          placeholder="One email per line or comma-separated"
+        ></textarea>
+      </mat-form-field>
+
+      <p class="gc-error" *ngIf="error" role="alert">{{ error }}</p>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="gc-btn"
+        (click)="create()"
+        [disabled]="creating || !newName.trim()"
+      >
+        <mat-icon>add</mat-icon>
+        {{ creating ? 'Creating…' : 'Create group' }}
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>
+

@@ -1,13 +1,17 @@
-<mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+<mat-sidenav-container
+  class="sidenav-container"
+  [style.marginTop.px]="mobileQuery.matches ? headerOffset : 0"
+>
   <mat-sidenav
     #snav
     [mode]="mobileQuery.matches ? 'over' : 'side'"
     [fixedInViewport]="mobileQuery.matches"
-    [fixedTopGap]="mobileQuery.matches ? 56 : 0"
+    [fixedTopGap]="mobileQuery.matches ? headerOffset : 0"
     [opened]="!mobileQuery.matches"
     class="sidenav"
   >
-    <nav class="nav">
+    <nav class="nav" aria-label="Workspace">
+      <p class="nav-section-label">Workspace</p>
       <a
         mat-list-item
         routerLink="/dashboard"
@@ -15,39 +19,32 @@
         [routerLinkActiveOptions]="{ exact: true }"
         (click)="mobileQuery.matches && snav.close()"
       >
-        <mat-icon mat-list-icon>dashboard</mat-icon>
-        <span>Dashboard</span>
+        <mat-icon mat-list-icon>home</mat-icon>
+        <span>Home</span>
       </a>
       <a
         mat-list-item
-        routerLink="/user"
+        routerLink="/groups"
         routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
         (click)="mobileQuery.matches && snav.close()"
       >
-        <mat-icon mat-list-icon>people</mat-icon>
-        <span>Users</span>
+        <mat-icon mat-list-icon>groups</mat-icon>
+        <span>Groups</span>
       </a>
       <a
         mat-list-item
-        routerLink="/products"
+        routerLink="/groups/new"
         routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
         (click)="mobileQuery.matches && snav.close()"
       >
-        <mat-icon mat-list-icon>inventory_2</mat-icon>
-        <span>Products</span>
-      </a>
-      <a
-        mat-list-item
-        routerLink="/sales"
-        routerLinkActive="active"
-        (click)="mobileQuery.matches && snav.close()"
-      >
-        <mat-icon mat-list-icon>point_of_sale</mat-icon>
-        <span>Sales</span>
+        <mat-icon mat-list-icon>add_circle</mat-icon>
+        <span>Create group</span>
       </a>
     </nav>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content-placeholder">
-    <!-- Main content is in main-shell -->
+    <!-- Routed content lives in main-shell -->
   </mat-sidenav-content>
 </mat-sidenav-container>

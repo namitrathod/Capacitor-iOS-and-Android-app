@@ -1,8 +1,14 @@
-from sqlmodel import Field, Relationship, SQLModel
+from datetime import datetime, timezone
+from sqlmodel import Field, SQLModel
 
 
-# Shared properties
-# TODO replace email str with EmailStr when sqlmodel supports it
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+# --- User (auth) ---
+
+
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
     is_active: bool = True
@@ -10,26 +16,21 @@ class UserBase(SQLModel):
     full_name: str | None = None
 
 
-# Properties to receive via API on creation
 class UserCreate(UserBase):
     password: str
 
 
-# TODO replace email str with EmailStr when sqlmodel supports it
 class UserCreateOpen(SQLModel):
     email: str
     password: str
     full_name: str | None = None
 
 
-# Properties to receive via API on update, all are optional
-# TODO replace email str with EmailStr when sqlmodel supports it
 class UserUpdate(UserBase):
     email: str | None = None  # type: ignore
     password: str | None = None
 
 
-# TODO replace email str with EmailStr when sqlmodel supports it
 class UserUpdateMe(SQLModel):
     full_name: str | None = None
     email: str | None = None
@@ -40,16 +41,19 @@ class UpdatePassword(SQLModel):
     new_password: str
 
 
-# Database model, database table inferred from class name
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
-    items: list["Item"] = Relationship(back_populates="owner")
 
 
-# Properties to return via API, id is always required
 class UserOut(UserBase):
     id: int
+
+
+class UserContactOut(SQLModel):
+    id: int
+    email: str
+    full_name: str | None = None
 
 
 class UsersOut(SQLModel):
@@ -57,62 +61,167 @@ class UsersOut(SQLModel):
     count: int
 
 
-# Shared properties
-class ItemBase(SQLModel):
-    title: str
-    description: str | None = None
+# --- Split groups & expenses (Splitwise-style) ---
 
 
-# Properties to receive on item creation
-class ItemCreate(ItemBase):
-    title: str
+class SplitGroup(SQLModel, table=True):
+    """A shared group for splitting bills (e.g. trip, apartment, dinner)."""
 
+    __tablename__ = "split_group"
 
-# Properties to receive on item update
-class ItemUpdate(ItemBase):
-    title: str | None = None  # type: ignore
-
-
-# Database model, database table inferred from class name
-class Item(ItemBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    title: str
-    owner_id: int | None = Field(default=None, foreign_key="user.id", nullable=False)
-    owner: User | None = Relationship(back_populates="items")
+    name: str = Field(index=True)
+    created_by_id: int = Field(foreign_key="user.id")
 
 
-# Properties to return via API, id is always required
-class ItemOut(ItemBase):
+class GroupMember(SQLModel, table=True):
+    __tablename__ = "group_member"
+
+    id: int | None = Field(default=None, primary_key=True)
+    group_id: int = Field(foreign_key="split_group.id", index=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+
+
+class Expense(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    group_id: int = Field(foreign_key="split_group.id", index=True)
+    description: str
+    amount: float
+    paid_by_user_id: int = Field(foreign_key="user.id")
+    created_at: datetime = Field(default_factory=utc_now)
+
+
+class ExpenseShare(SQLModel, table=True):
+    """How much each participant owes for one expense (equal split stored per row)."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    expense_id: int = Field(foreign_key="expense.id", index=True)
+    user_id: int = Field(foreign_key="user.id")
+    amount: float
+
+
+# --- API schemas ---
+
+
+class GroupCreate(SQLModel):
+    name: str
+    member_emails: list[str] = Field(default_factory=list)
+
+
+class GroupMemberOut(SQLModel):
+    user_id: int
+    email: str
+    full_name: str | None = None
+
+
+class GroupOut(SQLModel):
     id: int
-    owner_id: int
+    name: str
+    created_by_id: int
 
 
-class ItemsOut(SQLModel):
-    data: list[ItemOut]
+class GroupDetailOut(SQLModel):
+    id: int
+    name: str
+    created_by_id: int
+    members: list[GroupMemberOut]
+
+
+class AddMemberByEmail(SQLModel):
+    email: str
+
+
+class ExpenseCreate(SQLModel):
+    description: str
+    amount: float
+    paid_by_user_id: int
+    participant_user_ids: list[int]
+
+
+class ExpenseShareOut(SQLModel):
+    user_id: int
+    amount: float
+
+
+class ExpenseOut(SQLModel):
+    id: int
+    group_id: int
+    description: str
+    amount: float
+    paid_by_user_id: int
+    created_at: datetime
+    shares: list[ExpenseShareOut]
+
+
+class ExpensesPageOut(SQLModel):
+    data: list[ExpenseOut]
     count: int
 
 
-# Sale (product_id references Item.id)
-class Sale(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class BalanceRow(SQLModel):
     user_id: int
-    product_id: int
-    quantity: int
-    price: float
+    email: str
+    full_name: str | None = None
+    balance: float  # >0 = net creditor (others owe you)
 
 
-# Generic message
+class SettlementRow(SQLModel):
+    from_user_id: int
+    from_email: str
+    to_user_id: int
+    to_email: str
+    amount: float
+
+
+class SettlementTransferIn(SQLModel):
+    """User-provided settlement transfer for custom settlement amounts."""
+
+    from_user_id: int
+    to_user_id: int
+    amount: float
+
+
+class SettleUpRequest(SQLModel):
+    """
+    Optional settlement request payload.
+
+    - If `transfers` is provided, backend uses those transfers as-is (custom amounts).
+    - Otherwise, if `amount` is provided, backend generates transfers for the current user up to that amount (partial).
+    - If neither is provided, backend settles the user's balance fully.
+    """
+
+    amount: float | None = None
+    transfers: list[SettlementTransferIn] = Field(default_factory=list)
+
+
+class BalancesOut(SQLModel):
+    balances: list[BalanceRow]
+    settlements: list[SettlementRow]
+
+
+class UserActivityRow(SQLModel):
+    expense_id: int
+    group_id: int
+    group_name: str
+    description: str
+    created_at: datetime
+    total_amount: float
+    paid_by_user_id: int
+    paid_by_name: str
+    user_share_amount: float
+    user_net_amount: float
+    direction: str  # you_lent | you_owe | settled
+
+
 class Message(SQLModel):
     message: str
 
 
-# JSON payload containing access token
 class Token(SQLModel):
     access_token: str
     token_type: str = "bearer"
 
 
-# Contents of JWT token
 class TokenPayload(SQLModel):
     sub: int | None = None
 

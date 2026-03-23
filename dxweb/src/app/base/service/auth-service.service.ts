@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface TokenResponse {
   access_token: string;
@@ -11,7 +12,7 @@ export interface TokenResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://10.0.0.155:8000/api/v1'; // FastAPI backend base URL
+  private apiUrl = environment.apiUrl;
 
   /** For debugging: base URL used for API (no /api/v1). */
   get apiBaseUrl(): string {

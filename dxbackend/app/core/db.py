@@ -1,20 +1,19 @@
+import logging
+
 from sqlmodel import Session, SQLModel, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import User, UserCreate, Item, Sale
+from app.core.seed_demo import seed_local_demo_users
+from app.models import User, UserCreate
+
+logger = logging.getLogger(__name__)
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
 
-# make sure all SQLModel models are imported (app.models) before initializing DB
-# otherwise, SQLModel might fail to initialize relationships properly
-# for more details: https://github.com/tiangolo/full-stack-fastapi-template/issues/28
-
-
 def init_db(session: Session) -> None:
-    # For this dev setup, ensure tables exist without requiring Alembic.
-    # Models are already imported via app.models, so this is safe here.
+    # Ensure tables exist without requiring Alembic (dev).
     SQLModel.metadata.create_all(engine)
 
     user = session.exec(
@@ -25,5 +24,17 @@ def init_db(session: Session) -> None:
             email=settings.FIRST_SUPERUSER,
             password=settings.FIRST_SUPERUSER_PASSWORD,
             is_superuser=True,
+            full_name="Admin",
         )
         user = crud.create_user(session=session, user_create=user_in)
+    else:
+        # If the user already exists (e.g., dev DB reused), ensure full_name is present
+        # so the frontend can show a name instead of the raw email address.
+        if user.full_name is None:
+            user.full_name = "Admin"
+            session.add(user)
+            session.commit()
+
+    n = seed_local_demo_users(session)
+    if n:
+        logger.info("Seeded %s local demo user(s) for SplitKit testing", n)

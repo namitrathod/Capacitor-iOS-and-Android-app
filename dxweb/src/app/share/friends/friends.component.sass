@@ -1,0 +1,91 @@
+.fr-page
+  width: 100%
+  max-width: 640px
+  margin: 0 auto
+  padding: 4px 0 22px
+
+.fr-header
+  margin-bottom: 10px
+  h1
+    margin: 0 0 4px
+    font-size: clamp(1.4rem, 5vw, 1.7rem)
+    font-weight: 800
+    letter-spacing: -0.03em
+  p
+    margin: 0
+    color: var(--color-text-secondary)
+    font-size: 0.9rem
+
+.fr-search
+  width: 100%
+
+.fr-error
+  color: var(--color-error)
+  font-size: 0.86rem
+  margin: 6px 0 10px
+
+.fr-list
+  border-radius: var(--radius-lg)
+  border: 1px solid var(--color-border)
+  background: var(--color-surface)
+  overflow: hidden
+
+.fr-item
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 12px
+  border-top: 1px solid var(--color-border)
+  &:first-child
+    border-top: 0
+
+.fr-avatar
+  width: 42px
+  height: 42px
+  border-radius: 50%
+  display: flex
+  align-items: center
+  justify-content: center
+  background: linear-gradient(135deg, var(--sw-teal), var(--sw-teal-dark))
+  color: #fff
+  font-weight: 700
+  flex-shrink: 0
+
+.fr-main
+  flex: 1
+  min-width: 0
+
+.fr-name
+  font-weight: 700
+  font-size: 0.98rem
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.fr-email
+  margin-top: 2px
+  color: var(--color-text-secondary)
+  font-size: 0.8rem
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.fr-empty
+  text-align: center
+  color: var(--color-text-tertiary)
+  padding: 2.4rem 1rem
+  mat-icon
+    font-size: 40px
+    width: 40px
+    height: 40px
+    margin-bottom: 6px
+    opacity: 0.6
+  p
+    margin: 0
+
+.fr-loading
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 2rem
+

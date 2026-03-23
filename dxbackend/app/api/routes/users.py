@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import col, delete, func, select
+from sqlmodel import delete, func, select
 
 from app import crud
 from app.api.deps import (
@@ -12,16 +12,21 @@ from app.api.deps import (
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.models import (
-    Item,
+    Expense,
+    ExpenseShare,
+    GroupMember,
     Message,
+    SplitGroup,
     UpdatePassword,
     User,
     UserCreate,
     UserCreateOpen,
+    UserContactOut,
     UserOut,
     UsersOut,
     UserUpdate,
     UserUpdateMe,
+    UserActivityRow,
 )
 from app.utils import generate_new_account_email, send_email
 
@@ -122,6 +127,125 @@ def read_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     return current_user
 
 
+@router.get("/me/contacts", response_model=list[UserContactOut])
+def read_user_contacts(session: SessionDep, current_user: CurrentUser) -> Any:
+    """
+    List active users who share at least one group with current user.
+    """
+
+    # Find all groups the current user participates in.
+    group_id_rows = session.exec(
+        select(GroupMember.group_id).where(GroupMember.user_id == current_user.id)
+    ).all()
+
+    group_ids = [
+        row[0] if isinstance(row, tuple) else row  # type: ignore[assignment]
+        for row in group_id_rows
+    ]
+
+    if not group_ids:
+        return []
+
+    # Find other participants in those same groups.
+    # `session.exec(...).all()` returns a list of `tuple` values for aggregate/select expressions.
+    other_user_id_rows = session.exec(
+        select(func.distinct(GroupMember.user_id)).where(
+            GroupMember.group_id.in_(group_ids),
+            GroupMember.user_id != current_user.id,
+        )
+    ).all()
+
+    other_user_ids = [
+        row[0] if isinstance(row, tuple) else row  # type: ignore[assignment]
+        for row in other_user_id_rows
+    ]
+
+    if not other_user_ids:
+        return []
+
+    users = session.exec(
+        select(User)
+        .where(User.id.in_(other_user_ids))
+        .where(User.is_active == True)  # noqa: E712
+    ).all()
+
+    out = [UserContactOut(id=u.id, email=u.email, full_name=u.full_name) for u in users]
+    out.sort(key=lambda x: (x.full_name or x.email).lower())
+    return out
+
+
+@router.get("/me/activity", response_model=list[UserActivityRow])
+def read_user_activity(
+    session: SessionDep, current_user: CurrentUser, limit: int = 50
+) -> Any:
+    """
+    Recent user-scoped activity across all groups where user is involved.
+    """
+
+    safe_limit = min(max(limit, 1), 200)
+    expenses = session.exec(select(Expense).order_by(Expense.created_at.desc())).all()
+
+    rows: list[UserActivityRow] = []
+    for e in expenses:
+        shares = session.exec(
+            select(ExpenseShare).where(ExpenseShare.expense_id == e.id)
+        ).all()
+
+        user_share = 0.0
+        for s in shares:
+            if s.user_id == current_user.id:
+                user_share = float(s.amount)
+                break
+
+        involved = e.paid_by_user_id == current_user.id or user_share > 0.0
+        if not involved:
+            continue
+
+        g = session.get(SplitGroup, e.group_id)
+        if not g:
+            continue
+
+        payer = session.get(User, e.paid_by_user_id)
+        payer_name = (
+            payer.full_name
+            if payer and payer.full_name
+            else (payer.email if payer else f"#{e.paid_by_user_id}")
+        )
+
+        user_paid = float(e.amount) if e.paid_by_user_id == current_user.id else 0.0
+        user_net = round(user_paid - user_share, 2)
+        if user_net > 0.005:
+            direction = "you_lent"
+        elif user_net < -0.005:
+            direction = "you_owe"
+        else:
+            direction = "settled"
+
+        desc = e.description or ""
+        if desc.startswith("[SETTLE]"):
+            desc = desc.replace("[SETTLE]", "", 1).strip()
+
+        rows.append(
+            UserActivityRow(
+                expense_id=e.id,
+                group_id=e.group_id,
+                group_name=g.name,
+                description=desc,
+                created_at=e.created_at,
+                total_amount=round(float(e.amount), 2),
+                paid_by_user_id=e.paid_by_user_id,
+                paid_by_name=payer_name,
+                user_share_amount=round(user_share, 2),
+                user_net_amount=user_net,
+                direction=direction,
+            )
+        )
+        if len(rows) >= safe_limit:
+            break
+
+    return rows
+
+
 @router.post("/open", response_model=UserOut)
 def create_user_open(session: SessionDep, user_in: UserCreateOpen) -> Any:
     """
@@ -212,8 +336,20 @@ def delete_user(
             status_code=403, detail="Super users are not allowed to delete themselves"
         )
 
-    statement = delete(Item).where(col(Item.owner_id) == user_id)
-    session.exec(statement)  # type: ignore
+    if session.exec(select(Expense).where(Expense.paid_by_user_id == user_id)).first():
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete a user who is the recorded payer on expenses; delete those expenses first",
+        )
+    if session.exec(
+        select(SplitGroup).where(SplitGroup.created_by_id == user_id)
+    ).first():
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete a user who created split groups; assign another creator or delete the groups first",
+        )
+    session.exec(delete(ExpenseShare).where(ExpenseShare.user_id == user_id))
+    session.exec(delete(GroupMember).where(GroupMember.user_id == user_id))
     session.delete(user)
     session.commit()
     return Message(message="User deleted successfully")

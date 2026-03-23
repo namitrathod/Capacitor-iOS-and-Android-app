@@ -1,44 +1,93 @@
-<div class="auth-page">
-  <div class="auth-card-wrapper">
-    <mat-card class="auth-card">
-      <mat-card-content>
-        <div class="auth-header">
-          <mat-icon class="auth-logo">person_add</mat-icon>
-          <h1 class="auth-title">Create account</h1>
-          <p class="auth-subtitle">Register with your email and password</p>
-        </div>
+<div class="auth-page auth-page--split">
+  <aside class="auth-brand-panel" aria-label="Product">
+    <div class="auth-brand-inner">
+      <div class="auth-brand-mark" aria-hidden="true">SK</div>
+      <h2 class="auth-brand-title">SplitKit</h2>
+      <p class="auth-brand-tagline">
+        One place for trips, roommates, and dinners — everyone sees the same numbers.
+      </p>
+      <ul class="auth-brand-bullets">
+        <li>
+          <mat-icon aria-hidden="true">receipt_long</mat-icon>
+          <span>Log who paid and split across any subset of the group.</span>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">account_balance</mat-icon>
+          <span>Net balances and minimum settlement suggestions.</span>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">speed</mat-icon>
+          <span>Built for speed: create a group and add an expense in under a minute.</span>
+        </li>
+      </ul>
+    </div>
+  </aside>
 
-        <form (ngSubmit)="register()" class="auth-form">
-          <mat-form-field appearance="outline" class="auth-field">
-            <mat-label>Full name</mat-label>
-            <input matInput type="text" [(ngModel)]="username" name="username" placeholder="Your name" />
-            <mat-icon matSuffix>person_outline</mat-icon>
-          </mat-form-field>
+  <div class="auth-form-panel">
+    <div class="auth-card-wrapper">
+      <mat-card class="auth-card" appearance="outlined">
+        <mat-card-content>
+          <div class="auth-header">
+            <mat-icon class="auth-logo" aria-hidden="true">person_add</mat-icon>
+            <h1 class="auth-title">Create account</h1>
+            <p class="auth-subtitle">You’ll use this email to sign in and to be added to groups.</p>
+          </div>
 
-          <mat-form-field appearance="outline" class="auth-field">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" [(ngModel)]="email" name="email" placeholder="you@example.com" required />
-            <mat-icon matSuffix>mail_outline</mat-icon>
-          </mat-form-field>
+          <form (ngSubmit)="register()" class="auth-form">
+            <mat-form-field appearance="outline" class="auth-field">
+              <mat-label>Full name</mat-label>
+              <input matInput type="text" [(ngModel)]="username" name="username" autocomplete="name" required />
+              <mat-icon matSuffix aria-hidden="true">person_outline</mat-icon>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="auth-field">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" [(ngModel)]="password" name="password" placeholder="••••••••" minlength="6" required />
-            <mat-icon matSuffix>lock_outline</mat-icon>
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="auth-field">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                [(ngModel)]="email"
+                name="email"
+                placeholder="you@company.com"
+                autocomplete="email"
+                required
+              />
+              <mat-icon matSuffix aria-hidden="true">mail_outline</mat-icon>
+            </mat-form-field>
 
-          <p class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+            <mat-form-field appearance="outline" class="auth-field">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                [(ngModel)]="password"
+                name="password"
+                placeholder="At least 6 characters"
+                minlength="6"
+                autocomplete="new-password"
+                required
+              />
+              <mat-icon matSuffix aria-hidden="true">lock_outline</mat-icon>
+            </mat-form-field>
 
-          <button mat-raised-button color="primary" type="submit" class="auth-submit" [disabled]="!email.trim() || !password">
-            Create account
-          </button>
-        </form>
+            <p class="auth-error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
 
-        <p class="auth-footer">
-          Already have an account?
-          <a routerLink="/login" class="auth-link">Sign in</a>
-        </p>
-      </mat-card-content>
-    </mat-card>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="auth-submit"
+              [disabled]="!username.trim() || !email.trim() || !password"
+            >
+              Create account
+            </button>
+          </form>
+
+          <p class="auth-footer">
+            Already registered?
+            <a routerLink="/login" class="auth-link">Sign in</a>
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

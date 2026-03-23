@@ -1,26 +1,56 @@
-<!-- When logged in: full-width header + sidebar + content -->
+<!-- Logged-in shell: app chrome + sidebar + content -->
 <div class="main-layout" *ngIf="showSidebar">
   <header class="top-bar">
-    <button
-      type="button"
-      mat-icon-button
-      class="top-bar-menu-button"
-      (click)="toggleSidebar()"
-      aria-label="Toggle navigation"
-    >
-      <mat-icon>menu</mat-icon>
-    </button>
-    <a routerLink="/dashboard" class="top-bar-brand">
-      <mat-icon class="top-bar-brand-icon">dashboard</mat-icon>
-      <span class="top-bar-brand-name">Dashboard</span>
+    <a routerLink="/groups" class="top-bar-brand">
+      <div class="top-bar-brand-mark" aria-hidden="true">SK</div>
+      <div class="top-bar-brand-text">
+        <span class="top-bar-brand-name">SplitKit</span>
+        <span class="top-bar-brand-env">Expense groups</span>
+      </div>
     </a>
-    <div class="top-bar-spacer"></div>
   </header>
   <div class="main-row">
-    <app-sidebar></app-sidebar>
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <router-outlet></router-outlet>
     </main>
   </div>
+
+  <nav class="mobile-tabbar" aria-label="Primary">
+    <a
+      routerLink="/friends"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="mobile-tabbar__item"
+    >
+      <mat-icon>person_outline</mat-icon>
+      <span>Friends</span>
+    </a>
+    <a
+      routerLink="/groups"
+      routerLinkActive="is-active"
+      class="mobile-tabbar__item"
+    >
+      <mat-icon>groups</mat-icon>
+      <span>Groups</span>
+    </a>
+    <a
+      routerLink="/activity"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="mobile-tabbar__item"
+    >
+      <mat-icon>monitoring</mat-icon>
+      <span>Activity</span>
+    </a>
+    <a
+      routerLink="/account"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="mobile-tabbar__item"
+    >
+      <mat-icon>pie_chart</mat-icon>
+      <span>Account</span>
+    </a>
+  </nav>
 </div>
 <router-outlet *ngIf="!showSidebar"></router-outlet>

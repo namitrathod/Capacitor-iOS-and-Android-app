@@ -14,11 +14,6 @@ export interface TokenResponse {
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  /** For debugging: base URL used for API (no /api/v1). */
-  get apiBaseUrl(): string {
-    return this.apiUrl.replace(/\/api\/v1\/?$/, '');
-  }
-
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string): Observable<TokenResponse> {
@@ -30,7 +25,7 @@ export class AuthService {
     });
 
     return this.http
-      .post<TokenResponse>(`${this.apiUrl}/login/access-token`, body.toString(), { headers })
+      .post<TokenResponse>(`${this.apiUrl}/login`, body.toString(), { headers })
       .pipe(
         tap((token) => {
           localStorage.setItem('access_token', token.access_token);
@@ -47,11 +42,10 @@ export class AuthService {
   }
 
   register(username: string, email: string, password: string): Observable<any> {
-    // Uses open registration endpoint from FastAPI template
-    return this.http.post<any>(`${this.apiUrl}/users/open`, {
+    return this.http.post<any>(`${this.apiUrl}/register`, {
+      username,
       email,
       password,
-      full_name: username,
     });
   }
 

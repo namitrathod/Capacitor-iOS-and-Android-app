@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import or_
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
 from passlib.context import CryptContext
@@ -36,8 +37,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "Origin"],
 )
 
 # Configuración de la base de datos (env on EC2/Docker; localhost fallback for local dev)
@@ -63,8 +64,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "tu_clave_secreta")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Configuración de seguridad para el hashing de contraseñas
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pbkdf2 avoids passlib+bcrypt breakage on Python 3.11 (common in Docker with bcrypt 4.1+).
+# Existing rows hashed with bcrypt still verify if you add bcrypt to schemes *and* pin bcrypt<4.1;
+# for a clean deploy, pbkdf2-only is simplest.
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 # Inicialización del ORM
 Base = declarative_base()
@@ -113,6 +116,22 @@ def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl="/login"
 def get_user_by_username(db, username: str):
     return db.query(User).filter(User.username == username).first()
 
+
+def get_user_by_email(db, email: str):
+    return db.query(User).filter(User.email == email).first()
+
+
+def get_user_by_username_or_email(db, login: str):
+    """Login field may be username or email (Angular sign-in is labeled Email)."""
+    login = (login or "").strip()
+    if not login:
+        return None
+    return (
+        db.query(User)
+        .filter(or_(User.username == login, User.email == login))
+        .first()
+    )
+
 # Funciones para la autenticación
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -127,8 +146,7 @@ def create_access_token(data: dict):
 # Rutas del API
 @app.post("/register", status_code=status.HTTP_201_CREATED)
 def register_user(user: dict, db: Session = Depends(get_db)):
-    db_user = get_user_by_username(db, user['username'])
-    if db_user:
+    if get_user_by_username(db, user["username"]) or get_user_by_email(db, user["email"]):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El usuario ya existe")
     hashed_password = pwd_context.hash(user['password'])
     db_user = User(username=user['username'], email=user['email'], hashed_password=hashed_password)
@@ -138,7 +156,7 @@ def register_user(user: dict, db: Session = Depends(get_db)):
 
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = get_user_by_username(db, form_data.username)
+    user = get_user_by_username_or_email(db, form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales inválidas")
     access_token = create_access_token({"sub": user.username})

@@ -25,6 +25,8 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    docs_url=f"{settings.API_V1_STR}/docs",
+    redoc_url=f"{settings.API_V1_STR}/redoc",
     generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan,
 )

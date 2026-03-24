@@ -3,7 +3,6 @@ import warnings
 from typing import Annotated, Any, Literal
 
 from pydantic import (
-    AnyUrl,
     BeforeValidator,
     HttpUrl,
     PostgresDsn,
@@ -42,9 +41,8 @@ class Settings(BaseSettings):
             return f"http://{self.DOMAIN}"
         return f"https://{self.DOMAIN}"
 
-    BACKEND_CORS_ORIGINS: Annotated[
-        list[AnyUrl] | str, BeforeValidator(parse_cors)
-    ] = []
+    # Plain strings so schemes like capacitor://localhost are accepted from env.
+    BACKEND_CORS_ORIGINS: Annotated[list[str] | str, BeforeValidator(parse_cors)] = []
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None

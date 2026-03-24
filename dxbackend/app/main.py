@@ -29,7 +29,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Set all CORS enabled origins (in local env allow all so mobile app WebView can connect)
+# CORS: Capacitor/WebView XHR is cross-origin to EC2; without middleware, clients often see status 0.
+# If BACKEND_CORS_ORIGINS is unset on staging/production, we still allow typical native app origins.
 if settings.ENVIRONMENT == "local":
     app.add_middleware(
         CORSMiddleware,
@@ -38,12 +39,22 @@ if settings.ENVIRONMENT == "local":
         allow_methods=["*"],
         allow_headers=["*"],
     )
-elif settings.BACKEND_CORS_ORIGINS:
+else:
+    if settings.BACKEND_CORS_ORIGINS:
+        cors_origins = [
+            str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
+        ]
+    else:
+        cors_origins = [
+            "capacitor://localhost",
+            "ionic://localhost",
+            "http://localhost",
+            "https://localhost",
+            "http://localhost:4200",
+        ]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
-        ],
+        allow_origins=cors_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

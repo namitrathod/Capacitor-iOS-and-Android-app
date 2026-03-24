@@ -47,5 +47,19 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Authenticate with Face ID to unlock SplitKit.</string>
+	<!-- Allow HTTP to EC2 IP until you serve the API over HTTPS -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>3.88.0.203</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>

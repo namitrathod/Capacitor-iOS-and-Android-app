@@ -4,6 +4,8 @@ fastapi>=0.109.0
 uvicorn[standard]>=0.27.0
 sqlmodel>=0.0.14
 pydantic-settings>=2.0.0
+# Required when models/routes use EmailStr (e.g. app.api.routes.utils)
+email-validator>=2.0.0
 python-jose[cryptography]>=3.3.0
 # Plain passlib only (no bcrypt extra). main.py + app/core/security.py use pbkdf2_sha256.
 passlib>=1.7.4

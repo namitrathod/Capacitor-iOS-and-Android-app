@@ -25,7 +25,11 @@ export class AuthService {
     });
 
     return this.http
-      .post<TokenResponse>(`${this.apiUrl}/login`, body.toString(), { headers })
+      .post<TokenResponse>(
+        `${this.apiUrl}/login/access-token`,
+        body.toString(),
+        { headers }
+      )
       .pipe(
         tap((token) => {
           localStorage.setItem('access_token', token.access_token);
@@ -42,10 +46,10 @@ export class AuthService {
   }
 
   register(username: string, email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, {
-      username,
+    return this.http.post<any>(`${this.apiUrl}/users/open`, {
       email,
       password,
+      full_name: username.trim() || null,
     });
   }
 

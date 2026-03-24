@@ -5,9 +5,8 @@ uvicorn[standard]>=0.27.0
 sqlmodel>=0.0.14
 pydantic-settings>=2.0.0
 python-jose[cryptography]>=3.3.0
-passlib[bcrypt]>=1.7.4
-# passlib 1.7.x is incompatible with bcrypt 4.1+ on Python 3.11 (crashes on first hash).
-bcrypt>=4.0.1,<4.1
+# Plain passlib only (no bcrypt extra). main.py + app/core/security.py use pbkdf2_sha256.
+passlib>=1.7.4
 psycopg2-binary>=2.9.9
 python-multipart>=0.0.6
 emails>=0.6

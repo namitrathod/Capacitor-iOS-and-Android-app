@@ -1,0 +1,14 @@
+{
+	"appId": "com.example.splitkit",
+	"appName": "SplitKit",
+	"webDir": "dist/dxweb",
+	"android": {
+		"allowMixedContent": true
+	},
+	"server": {
+		"androidScheme": "http"
+	},
+	"packageClassList": [
+		"FaceId"
+	]
+}

@@ -1,13 +1,13 @@
+# Build / IDE noise
 App/build
-App/Pods
 App/output
-App/App/public
 DerivedData
 xcuserdata
 
-# Cordova plugins for Capacitor
-capacitor-cordova-ios-plugins
+# CocoaPods — not committed by default (large). After first `pod install` on a Mac you may
+# commit `App/Pods/` if you want clone-and-open-Xcode with zero terminal commands.
+App/Pods
 
-# Generated Config files
-App/App/capacitor.config.json
-App/App/config.xml
+# Tracked on purpose (after `npm run build` + `npx cap sync ios`):
+# - App/App/public          → bundled web assets
+# - App/App/capacitor.config.json, config.xml → sync output

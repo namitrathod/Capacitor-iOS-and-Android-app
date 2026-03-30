@@ -19,6 +19,7 @@ import {
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
 import { SettleUpDialogComponent } from './settle-up-dialog/settle-up-dialog.component';
 import { LeaveGroupDialogComponent } from './leave-group-dialog.component';
+import { DeleteExpenseDialogComponent } from './delete-expense-dialog.component';
 
 @Component({
   selector: 'app-group-detail',
@@ -327,16 +328,28 @@ export class GroupDetailComponent implements OnInit {
   }
 
   removeExpense(e: ExpenseOut): void {
-    if (!confirm(`Delete “${e.description}”?`)) return;
-    this.groupsService.deleteExpense(this.groupId, e.id).subscribe({
-      next: () => {
-        this.loadExpenses();
-        this.loadBalances();
-      },
-      error: (err) => {
-        this.error = formatHttpError(err);
-      },
-    });
+    this.dialog
+      .open<DeleteExpenseDialogComponent, { description?: string | null }, boolean>(
+        DeleteExpenseDialogComponent,
+        {
+          width: '420px',
+          data: { description: e.description },
+          disableClose: true,
+        }
+      )
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.groupsService.deleteExpense(this.groupId, e.id).subscribe({
+          next: () => {
+            this.loadExpenses();
+            this.loadBalances();
+          },
+          error: (err) => {
+            this.error = formatHttpError(err);
+          },
+        });
+      });
   }
 
   leave(): void {

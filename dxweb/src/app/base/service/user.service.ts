@@ -29,8 +29,8 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/users/${id}`);
   }
 
-  deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/users/${id}`);
+  deleteUser(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/users/${id}`);
   }
 
   createUser(user: { email: string; password: string; full_name?: string | null; is_superuser?: boolean }): Observable<User> {

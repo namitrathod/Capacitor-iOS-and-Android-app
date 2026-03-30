@@ -13,7 +13,8 @@
     "cap:sync": "ng build --configuration production && cap sync",
     "cap:sync:dev": "ng build --configuration development && cap sync",
     "cap:open:ios": "cap open ios",
-    "cap:open:android": "cap open android"
+    "cap:open:android": "cap open android",
+    "android:permissions": "node scripts/print-android-permissions.mjs"
   },
   "private": true,
   "dependencies": {

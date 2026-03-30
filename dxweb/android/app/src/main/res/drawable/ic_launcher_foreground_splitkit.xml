@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SplitKit adaptive foreground: white “split tiles” on teal background (matches app shell).
+  Content kept inside ~66dp safe circle of 108dp canvas.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Left tile -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,36h16c2.2,0 4,1.8 4,4v28c0,2.2 -1.8,4 -4,4H34c-2.2,0 -4,-1.8 -4,-4V40c0,-2.2 1.8,-4 4,-4z" />
+    <!-- Right tile (gap between tiles reads as “split”) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,36h16c2.2,0 4,1.8 4,4v28c0,2.2 -1.8,4 -4,4H58c-2.2,0 -4,-1.8 -4,-4V40c0,-2.2 1.8,-4 4,-4z" />
+</vector>

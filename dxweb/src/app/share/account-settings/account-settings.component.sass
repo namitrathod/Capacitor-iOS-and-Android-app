@@ -55,13 +55,23 @@
 
 .acc-row__left
   display: inline-flex
-  align-items: center
-  gap: 12px
+  flex-direction: column
+  align-items: flex-start
+  justify-content: center
+  gap: 2px
+  text-align: left
   mat-icon
     color: var(--color-text-tertiary)
     font-size: 22px
     width: 22px
     height: 22px
+
+.acc-row__hint
+  font-size: 0.78rem
+  font-weight: 400
+  color: var(--color-text-tertiary)
+  line-height: 1.3
+  max-width: 240px
 
 .acc-row__chev
   color: var(--color-text-placeholder)

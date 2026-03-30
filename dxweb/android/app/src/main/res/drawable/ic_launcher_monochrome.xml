@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Monochrome layer for themed / “tinted” launcher icons (API 33+).
+  Single-color silhouette; the system applies user theme tint. Not used for legacy adaptive icons.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Two rounded tiles = “split” — simple, reads at small sizes -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,38h22c3.3,0 6,2.7 6,6v28c0,3.3 -2.7,6 -6,6H28c-3.3,0 -6,-2.7 -6,-6V44c0,-3.3 2.7,-6 6,-6zM58,38h22c3.3,0 6,2.7 6,6v28c0,3.3 -2.7,6 -6,6H58c-3.3,0 -6,-2.7 -6,-6V44c0,-3.3 2.7,-6 6,-6z" />
+</vector>

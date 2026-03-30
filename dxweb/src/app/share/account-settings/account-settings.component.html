@@ -35,8 +35,19 @@
       <mat-icon class="acc-row__chev">chevron_right</mat-icon>
     </button>
 
-    <button class="acc-row" type="button" (click)="contactUs()">
-      <span class="acc-row__left"><span>Contact us</span></span>
+    <button class="acc-row" type="button" (click)="contactDeveloper()">
+      <span class="acc-row__left">
+        <span>Contact developer</span>
+        <span class="acc-row__hint">General questions &amp; feedback</span>
+      </span>
+      <mat-icon class="acc-row__chev">chevron_right</mat-icon>
+    </button>
+
+    <button class="acc-row" type="button" (click)="reportHarmfulContent()">
+      <span class="acc-row__left">
+        <span>Report harmful content</span>
+        <span class="acc-row__hint">Safety, abuse, or policy concerns</span>
+      </span>
       <mat-icon class="acc-row__chev">chevron_right</mat-icon>
     </button>
   </div>

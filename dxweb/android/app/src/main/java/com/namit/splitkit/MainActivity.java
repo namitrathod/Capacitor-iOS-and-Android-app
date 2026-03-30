@@ -1,4 +1,4 @@
-package com.example.dxweb;
+package com.namit.splitkit;
 
 import android.webkit.WebSettings;
 import com.getcapacitor.Bridge;

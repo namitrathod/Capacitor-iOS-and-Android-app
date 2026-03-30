@@ -12,8 +12,8 @@ This project uses [Capacitor](https://capacitorjs.com/) to run the same Angular 
 
 2. **Config**
    - `capacitor.config.ts` at `dxweb` root:
-     - `appId`: `com.example.dxweb` (change for your app)
-     - `appName`: `DxWeb`
+     - `appId`: `com.namit.splitkit`
+     - `appName`: `SplitKit`
      - `webDir`: `dist/dxweb` (Angular build output)
    - Optional `server.url` for live reload on device.
 

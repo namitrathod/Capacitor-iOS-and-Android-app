@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/base/service/auth-service.service';
 import { FaceIdService } from 'src/app/base/service/face-id.service';
 import { UserProfileService } from 'src/app/base/service/user-profile.service';
 import { formatHttpError } from 'src/app/core/http-error.util';
+import { DEVELOPER_CONTACT_EMAIL } from 'src/app/core/support.constants';
 
 @Component({
   selector: 'app-account-settings',
@@ -122,11 +123,21 @@ export class AccountSettingsComponent implements OnInit {
     }
   }
 
-  contactUs(): void {
-    this.snack.open('Contact us: support@splitkit.test', 'OK', {
-      duration: 3200,
-      panelClass: ['splitkit-snack'],
-    });
+  contactDeveloper(): void {
+    const subject = encodeURIComponent('SplitKit — Contact developer');
+    const body = encodeURIComponent(
+      'Describe your question or feedback:\n\n'
+    );
+    window.location.href = `mailto:${DEVELOPER_CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  }
+
+  reportHarmfulContent(): void {
+    const subject = encodeURIComponent('SplitKit — Report content / safety');
+    const body = encodeURIComponent(
+      'Please describe what you are reporting (include group or screen if relevant). ' +
+        'Our Terms prohibit child sexual abuse and exploitation and other harmful content.\n\n'
+    );
+    window.location.href = `mailto:${DEVELOPER_CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   }
 
   goPrivacy(): void {

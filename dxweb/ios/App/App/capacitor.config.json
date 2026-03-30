@@ -1,5 +1,5 @@
 {
-	"appId": "com.example.splitkit",
+	"appId": "com.namit.splitkit",
 	"appName": "SplitKit",
 	"webDir": "dist/dxweb",
 	"android": {

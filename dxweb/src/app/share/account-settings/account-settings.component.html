@@ -39,6 +39,20 @@
       <span class="acc-row__left"><span>Contact us</span></span>
       <mat-icon class="acc-row__chev">chevron_right</mat-icon>
     </button>
+
+    <button
+      class="acc-row"
+      type="button"
+      (click)="deleteAccount()"
+      [disabled]="deleting"
+    >
+      <span class="acc-row__left">
+        <span>{{ deleting ? 'Deleting...' : 'Delete my account' }}</span>
+      </span>
+      <mat-icon class="acc-row__chev">delete</mat-icon>
+    </button>
+
+    <p class="acc-error" *ngIf="deleteError" role="alert">{{ deleteError }}</p>
   </div>
 
   <div class="acc-logout-wrap" *ngIf="!loading">

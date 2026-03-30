@@ -1,13 +1,16 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.splitkit',
+  appId: 'com.namit.splitkit',
   appName: 'SplitKit',
   webDir: 'dist/dxweb',
+  // Keep Android WebView on secure defaults for Play production builds.
+  android: {
+    allowMixedContent: false,
+  },
   /**
-   * Native builds: omit `server` so the app loads bundled files from `webDir` after `ng build`.
-   * Live reload only: uncomment and set to your dev machine, e.g.
-   * server: { url: 'http://192.168.1.10:4200', cleartext: true },
+   * Native builds: omit `server.url` so the app loads bundled files from `webDir` after `ng build`.
+   * Live reload only: set server.url to your dev machine, e.g. http://192.168.1.10:4200
    */
 };
 

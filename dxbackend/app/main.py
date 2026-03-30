@@ -25,14 +25,11 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url=f"{settings.API_V1_STR}/docs",
-    redoc_url=f"{settings.API_V1_STR}/redoc",
     generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan,
 )
 
-# CORS: Capacitor/WebView XHR is cross-origin to EC2; without middleware, clients often see status 0.
-# If BACKEND_CORS_ORIGINS is unset on staging/production, we still allow typical native app origins.
+# Set all CORS enabled origins (in local env allow all so mobile app WebView can connect)
 if settings.ENVIRONMENT == "local":
     app.add_middleware(
         CORSMiddleware,
@@ -41,22 +38,12 @@ if settings.ENVIRONMENT == "local":
         allow_methods=["*"],
         allow_headers=["*"],
     )
-else:
-    if settings.BACKEND_CORS_ORIGINS:
-        cors_origins = [
-            str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
-        ]
-    else:
-        cors_origins = [
-            "capacitor://localhost",
-            "ionic://localhost",
-            "http://localhost",
-            "https://localhost",
-            "http://localhost:4200",
-        ]
+elif settings.BACKEND_CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=cors_origins,
+        allow_origins=[
+            str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
+        ],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

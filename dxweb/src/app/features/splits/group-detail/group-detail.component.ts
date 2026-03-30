@@ -18,6 +18,7 @@ import {
 } from '../groups.service';
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
 import { SettleUpDialogComponent } from './settle-up-dialog/settle-up-dialog.component';
+import { LeaveGroupDialogComponent } from './leave-group-dialog.component';
 
 @Component({
   selector: 'app-group-detail',
@@ -339,13 +340,25 @@ export class GroupDetailComponent implements OnInit {
   }
 
   leave(): void {
-    if (!confirm('Leave this group?')) return;
-    this.groupsService.leaveGroup(this.groupId).subscribe({
-      next: () => this.router.navigate(['/groups']),
-      error: (err) => {
-        this.error = formatHttpError(err);
-      },
-    });
+    this.dialog
+      .open<LeaveGroupDialogComponent, { groupName?: string | null }, boolean>(
+        LeaveGroupDialogComponent,
+        {
+          width: '420px',
+          data: { groupName: this.group?.name },
+          disableClose: true,
+        }
+      )
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.groupsService.leaveGroup(this.groupId).subscribe({
+          next: () => this.router.navigate(['/groups']),
+          error: (err) => {
+            this.error = formatHttpError(err);
+          },
+        });
+      });
   }
 
   memberLabel(uid: number): string {

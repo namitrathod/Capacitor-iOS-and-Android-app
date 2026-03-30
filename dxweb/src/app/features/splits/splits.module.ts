@@ -8,6 +8,7 @@ import { GroupDetailComponent } from './group-detail/group-detail.component';
 import { GroupCreateComponent } from './group-create/group-create.component';
 import { AddExpenseDialogComponent } from './group-detail/add-expense-dialog/add-expense-dialog.component';
 import { SettleUpDialogComponent } from './group-detail/settle-up-dialog/settle-up-dialog.component';
+import { LeaveGroupDialogComponent } from './group-detail/leave-group-dialog.component';
 
 const routes: Routes = [
   { path: '', component: GroupListComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
     GroupCreateComponent,
     AddExpenseDialogComponent,
     SettleUpDialogComponent,
+    LeaveGroupDialogComponent,
   ],
   imports: [
     CommonModule,

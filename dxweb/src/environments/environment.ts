@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  /** API prefix from app.main (see /api/v1/docs). */
-  apiUrl: 'http://3.88.0.203:8000/api/v1',
+  /** Dev: use Angular proxy (see proxy.conf.json) so browser talks same origin (no CORS). */
+  apiUrl: '/api-proxy',
 };

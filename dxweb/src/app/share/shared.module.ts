@@ -8,6 +8,7 @@ import { MainShellComponent } from './fragments/main-shell/main-shell.component'
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from './material.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { DeleteAccountDialogComponent } from './account-settings/delete-account-dialog.component';
 import { ActivityComponent } from './activity/activity.component';
 import { FriendsComponent } from './friends/friends.component';
 import { PrivacyComponent } from './privacy/privacy.component';
@@ -20,6 +21,7 @@ import { TermsComponent } from './privacy/terms.component';
     MainShellComponent,
     DashboardComponent,
     AccountSettingsComponent,
+    DeleteAccountDialogComponent,
     ActivityComponent,
     FriendsComponent,
     PrivacyComponent,

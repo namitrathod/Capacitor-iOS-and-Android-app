@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Delete account?</h2>
+
+<mat-dialog-content class="del-body">
+  <p>
+    This will permanently delete your account<span *ngIf="data.email"> ({{ data.email }})</span>.
+    You will lose access to your groups and balances.
+  </p>
+  <p class="del-warn"><strong>This cannot be undone.</strong></p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="warn" type="button" (click)="confirm()">
+    Delete
+  </button>
+</mat-dialog-actions>
+

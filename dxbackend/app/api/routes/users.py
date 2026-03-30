@@ -341,13 +341,21 @@ def delete_user(
             status_code=400,
             detail="Cannot delete a user who is the recorded payer on expenses; delete those expenses first",
         )
-    if session.exec(
+    created_groups = session.exec(
         select(SplitGroup).where(SplitGroup.created_by_id == user_id)
-    ).first():
-        raise HTTPException(
-            status_code=400,
-            detail="Cannot delete a user who created split groups; assign another creator or delete the groups first",
-        )
+    ).all()
+    for g in created_groups:
+        if session.exec(select(Expense).where(Expense.group_id == g.id)).first():
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot delete a user who created split groups with expenses; delete those group expenses first",
+            )
+        if session.exec(select(GroupMember).where(GroupMember.group_id == g.id)).first():
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot delete a user who created split groups that still have members; remove all members first",
+            )
+        session.delete(g)
     session.exec(delete(ExpenseShare).where(ExpenseShare.user_id == user_id))
     session.exec(delete(GroupMember).where(GroupMember.user_id == user_id))
     session.delete(user)

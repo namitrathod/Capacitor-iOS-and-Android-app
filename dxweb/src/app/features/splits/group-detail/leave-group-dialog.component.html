@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Leave group?</h2>
+
+<mat-dialog-content class="lg-body">
+  <p>
+    You are about to leave
+    <strong *ngIf="data.groupName">"{{ data.groupName }}"</strong>.
+  </p>
+  <p>You can be re-added later by another member.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="warn" type="button" (click)="confirm()">Leave group</button>
+</mat-dialog-actions>
+

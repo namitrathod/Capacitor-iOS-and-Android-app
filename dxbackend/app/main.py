@@ -6,6 +6,7 @@ from sqlmodel import Session
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
+from app.api.routes import legal
 from app.core.config import settings
 from app.core.db import engine, init_db
 
@@ -50,3 +51,5 @@ elif settings.BACKEND_CORS_ORIGINS:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+# Public HTML pages for store listings (no SPA): https://your-host/splitkit/privacy-policy
+app.include_router(legal.router, prefix="/splitkit", tags=["legal"])

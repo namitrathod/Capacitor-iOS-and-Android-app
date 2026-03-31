@@ -13,6 +13,7 @@ import { ActivityComponent } from './activity/activity.component';
 import { FriendsComponent } from './friends/friends.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './privacy/terms.component';
+import { NoInternetDialogComponent } from './no-internet-dialog/no-internet-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { TermsComponent } from './privacy/terms.component';
     FriendsComponent,
     PrivacyComponent,
     TermsComponent,
+    NoInternetDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +42,7 @@ import { TermsComponent } from './privacy/terms.component';
     FriendsComponent,
     PrivacyComponent,
     TermsComponent,
+    NoInternetDialogComponent,
   ],
 })
 export class SharedModule {}

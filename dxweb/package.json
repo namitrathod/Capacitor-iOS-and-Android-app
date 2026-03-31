@@ -29,6 +29,7 @@
     "@capacitor/android": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
+    "@capacitor/network": "^6.0.4",
     "@ngx-formly/core": "^6.1.4",
     "@ngx-formly/material": "^6.1.4",
     "capacitor-face-id": "^2.0.2",

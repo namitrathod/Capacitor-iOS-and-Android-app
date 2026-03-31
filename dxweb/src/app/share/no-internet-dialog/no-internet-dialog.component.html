@@ -1,0 +1,23 @@
+<h2 mat-dialog-title class="title-row">
+  <mat-icon aria-hidden="true">wifi_off</mat-icon>
+  No internet connection
+</h2>
+
+<mat-dialog-content class="body">
+  <p>
+    SplitKit needs an active internet connection to reach the server. Check your Wi‑Fi or mobile data, then try again.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    (click)="retry()"
+    [disabled]="checking"
+  >
+    <mat-spinner *ngIf="checking" diameter="20" class="btn-spinner"></mat-spinner>
+    <span>{{ checking ? 'Checking…' : 'Try again' }}</span>
+  </button>
+</mat-dialog-actions>

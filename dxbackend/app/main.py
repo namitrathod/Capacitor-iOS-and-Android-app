@@ -10,6 +10,18 @@ from app.api.routes import legal
 from app.core.config import settings
 from app.core.db import engine, init_db
 
+# Used when BACKEND_CORS_ORIGINS is empty on the server (e.g. EC2).
+_DEFAULT_CORS_ORIGINS: list[str] = [
+    "capacitor://localhost",
+    "ionic://localhost",
+    "http://localhost",
+    "https://localhost",
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+]
+# ng serve may use any port; match http(s)://localhost:* and 127.0.0.1:*
+_LOCALHOST_ORIGIN_REGEX = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
+
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.tags[0]}-{route.name}"
@@ -30,7 +42,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Set all CORS enabled origins (in local env allow all so mobile app WebView can connect)
+# CORS: non-local must always register middleware (empty BACKEND_CORS_ORIGINS used to skip CORS entirely).
 if settings.ENVIRONMENT == "local":
     app.add_middleware(
         CORSMiddleware,
@@ -39,12 +51,16 @@ if settings.ENVIRONMENT == "local":
         allow_methods=["*"],
         allow_headers=["*"],
     )
-elif settings.BACKEND_CORS_ORIGINS:
+else:
+    origins = (
+        [str(o).strip("/") for o in settings.BACKEND_CORS_ORIGINS]
+        if settings.BACKEND_CORS_ORIGINS
+        else list(_DEFAULT_CORS_ORIGINS)
+    )
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
-        ],
+        allow_origins=origins,
+        allow_origin_regex=_LOCALHOST_ORIGIN_REGEX,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

@@ -25,9 +25,13 @@ export class LoginComponent {
       },
       (error) => {
         if (error.status === 0) {
-          this.errorMessage = 'Error de conexión: No se pudo conectar al servidor.';
+          // No HTTP response: offline, DNS, TLS, firewall, or CORS blocking (browser hides the real status).
+          this.errorMessage =
+            'Error de conexión: No se pudo conectar al servidor. Comprueba Internet, que https://app.scriptchain.co/docs abre en el navegador, y que el backend en EC2 está en marcha (DNS/IP).';
         } else {
-          this.errorMessage = error.error.detail;
+          const d = error?.error?.detail;
+          this.errorMessage =
+            typeof d === 'string' ? d : d != null ? String(d) : 'Error del servidor';
         }
       }
     );
